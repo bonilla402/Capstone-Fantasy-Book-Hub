@@ -1,11 +1,11 @@
 ﻿const express = require('express');
 const router = express.Router();
-const User = require('../models/userModel');
+const Book = require('../models/bookModel');
 
 router.get('/', async (req, res, next) => {
     try {
-        const users = await User.getAllUsers();
-        res.json(users);
+        const books = await Book.getAllBooks();
+        res.json(books);
     } catch (err) {
         return next(err);
     }
