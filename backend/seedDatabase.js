@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const { Client } = require('pg');
+const bcrypt = require('bcrypt');
+
+const BCRYPT_WORK_FACTOR = 12;
 
 // Load JSON data
 const jsonFilePath = path.join(__dirname, 'books_data.json');
@@ -8,11 +11,11 @@ const booksData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
 
 // PostgreSQL connection configuration
 const dbConfig = {
-    user: 'postgres',      
+    user: 'postgres',
     host: 'localhost',
-    database: 'postgres',   
-    password: '123456',     
-    port: 5432,             
+    database: 'postgres',
+    password: '123456',
+    port: 5432,
 };
 
 const client = new Client(dbConfig);
@@ -47,54 +50,69 @@ async function seedDatabase() {
             DROP TABLE IF EXISTS book_topics, book_authors, books, authors, topics, users, discussion_groups, group_discussions, reviews CASCADE;
 
             CREATE TABLE users (
-                id SERIAL PRIMARY KEY,
-                username VARCHAR(50) NOT NULL UNIQUE,
-                email VARCHAR(100) NOT NULL UNIQUE,
-                password_hash TEXT NOT NULL,
-                profile_image TEXT,
-                bio TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                   id SERIAL PRIMARY KEY,
+                                   username VARCHAR(50) NOT NULL UNIQUE,
+                                   email VARCHAR(100) NOT NULL UNIQUE,
+                                   password_hash TEXT NOT NULL,
+                                   is_admin BOOLEAN DEFAULT FALSE,
+                                   profile_image TEXT,
+                                   bio TEXT,
+                                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
             CREATE TABLE authors (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(100) NOT NULL,
-                bio TEXT,
-                birth_year INTEGER,
-                death_year INTEGER
+                                     id SERIAL PRIMARY KEY,
+                                     name VARCHAR(100) NOT NULL,
+                                     bio TEXT,
+                                     birth_year INTEGER,
+                                     death_year INTEGER
             );
 
             CREATE TABLE books (
-                id SERIAL PRIMARY KEY,
-                title VARCHAR(255) NOT NULL,
-                cover_image TEXT,
-                year_published INTEGER,
-                synopsis TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                   id SERIAL PRIMARY KEY,
+                                   title VARCHAR(255) NOT NULL,
+                                   cover_image TEXT,
+                                   year_published INTEGER,
+                                   synopsis TEXT,
+                                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
             CREATE TABLE book_authors (
-                book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
-                author_id INTEGER REFERENCES authors(id) ON DELETE CASCADE,
-                PRIMARY KEY (book_id, author_id)
+                                          book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
+                                          author_id INTEGER REFERENCES authors(id) ON DELETE CASCADE,
+                                          PRIMARY KEY (book_id, author_id)
             );
 
             CREATE TABLE topics (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(100) NOT NULL UNIQUE
+                                    id SERIAL PRIMARY KEY,
+                                    name VARCHAR(100) NOT NULL UNIQUE
             );
 
             CREATE TABLE book_topics (
-                book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
-                topic_id INTEGER REFERENCES topics(id) ON DELETE CASCADE,
-                PRIMARY KEY (book_id, topic_id)
+                                         book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
+                                         topic_id INTEGER REFERENCES topics(id) ON DELETE CASCADE,
+                                         PRIMARY KEY (book_id, topic_id)
             );
         `;
 
         await newClient.query(schemaSQL);
         console.log('Tables created successfully.');
 
-        // Step 4: Insert book data with trimming and case-insensitive checks
+        // Step 4: Insert default admin user
+        console.log("Seeding users...");
+
+        const hashedAdminPassword = await bcrypt.hash("admin123", BCRYPT_WORK_FACTOR);
+
+        await newClient.query(
+            `INSERT INTO users (username, email, password_hash, is_admin)
+             VALUES ('admin', 'admin@example.com', $1, TRUE)
+                 ON CONFLICT (email) DO NOTHING`,
+            [hashedAdminPassword]
+        );
+
+        console.log("Admin user seeded.");
+
+        // Step 5: Insert book data
         for (const book of booksData) {
             const title = book.title.trim();
             const coverUrl = book.coverUrl ? book.coverUrl.trim() : null;
@@ -108,18 +126,18 @@ async function seedDatabase() {
             let topics = [];
             if (Array.isArray(book.topics)) {
                 topics = book.topics.flatMap(t => t.split('/').join(',')
-                                                   .split(';').join(',')
-                                                   .split('-').join(',')
-                                                   .split(',')
-                                                   .map(t => t.trim()))
-                                    .filter(t => t !== '');
+                    .split(';').join(',')
+                    .split('-').join(',')
+                    .split(',')
+                    .map(t => t.trim()))
+                    .filter(t => t !== '');
             } else if (typeof book.topics === 'string') {
                 topics = book.topics.split('/').join(',')
-                                    .split(';').join(',')
-                                    .split('-').join(',')
-                                    .split(',')
-                                    .map(t => t.trim())
-                                    .filter(t => t !== '');
+                    .split(';').join(',')
+                    .split('-').join(',')
+                    .split(',')
+                    .map(t => t.trim())
+                    .filter(t => t !== '');
             }
 
             // Insert book data
@@ -149,7 +167,7 @@ async function seedDatabase() {
                 }
 
                 await newClient.query(
-                    `INSERT INTO book_authors (book_id, author_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, 
+                    `INSERT INTO book_authors (book_id, author_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
                     [bookId, authorId]
                 );
             }
@@ -172,14 +190,13 @@ async function seedDatabase() {
                 }
 
                 await newClient.query(
-                    `INSERT INTO book_topics (book_id, topic_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, 
+                    `INSERT INTO book_topics (book_id, topic_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
                     [bookId, topicId]
                 );
             }
         }
 
         console.log('Data imported successfully.');
-
         await newClient.end();
         console.log('Database seeding complete.');
     } catch (error) {
