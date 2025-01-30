@@ -2,7 +2,9 @@
 
 class Topic {
     static async getAllTopics() {
-        const result = await db.query(`SELECT * FROM topics ORDER BY name ASC`);
+        const result = await db.query(`SELECT *
+                                       FROM topics
+                                       ORDER BY name `);
         return result.rows;
     }
 }
