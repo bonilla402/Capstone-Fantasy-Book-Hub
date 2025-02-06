@@ -120,6 +120,13 @@ async function seedDatabase() {
                                                content TEXT NOT NULL,
                                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+
+            CREATE TABLE group_members (
+                                           user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                                           group_id INTEGER NOT NULL REFERENCES discussion_groups(id) ON DELETE CASCADE,
+                                           PRIMARY KEY (user_id, group_id)
+            );
+
         `;
 
         await newClient.query(schemaSQL);
