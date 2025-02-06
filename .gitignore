@@ -39,7 +39,6 @@ logs/
 *.sln
 
 # Database files
-*.sql
 db.json
 
 # System files
