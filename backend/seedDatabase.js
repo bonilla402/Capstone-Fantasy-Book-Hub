@@ -93,6 +93,33 @@ async function seedDatabase() {
                                          topic_id INTEGER REFERENCES topics(id) ON DELETE CASCADE,
                                          PRIMARY KEY (book_id, topic_id)
             );
+
+            CREATE TABLE reviews (
+                                     id SERIAL PRIMARY KEY,
+                                     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                                     book_id INTEGER NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+                                     rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+                                     review_text TEXT,
+                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE discussion_groups (
+                                               id SERIAL PRIMARY KEY,
+                                               group_name VARCHAR(100) NOT NULL UNIQUE,
+                                               description TEXT,
+                                               created_by INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+                                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE group_discussions (
+                                               id SERIAL PRIMARY KEY,
+                                               group_id INTEGER NOT NULL REFERENCES discussion_groups(id) ON DELETE CASCADE,
+                                               user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+                                               book_id INTEGER NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+                                               title VARCHAR(255) NOT NULL,
+                                               content TEXT NOT NULL,
+                                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
         `;
 
         await newClient.query(schemaSQL);
