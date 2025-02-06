@@ -11,6 +11,18 @@ const Book = require('../models/bookModel');
  * Authorization required: Any logged-in user.
  *
  * @returns {Object[]} 200 - List of books with authors and topics.
+ * @example Response:
+ * [
+ *   {
+ *     "id": 1,
+ *     "title": "The Hobbit",
+ *     "cover_image": "https://example.com/hobbit.jpg",
+ *     "year_published": 1937,
+ *     "synopsis": "A hobbit embarks on a journey...",
+ *     "authors": ["J.R.R. Tolkien"],
+ *     "topics": ["Fantasy", "Adventure"]
+ *   }
+ * ]
  */
 router.get('/', ensureLoggedIn, async (req, res, next) => {
     try {
@@ -34,6 +46,21 @@ router.get('/', ensureLoggedIn, async (req, res, next) => {
  * Authorization required: Any logged-in user.
  *
  * @returns {Object[]} 200 - List of matching books with authors and topics.
+ * @example Request:
+ * GET /books/search?title=harry
+ *
+ * @example Response:
+ * [
+ *   {
+ *     "id": 2,
+ *     "title": "Harry Potter and the Sorcerer's Stone",
+ *     "cover_image": "https://example.com/hp1.jpg",
+ *     "year_published": 1997,
+ *     "synopsis": "A young wizard discovers his magical heritage...",
+ *     "authors": ["J.K. Rowling"],
+ *     "topics": ["Magic", "Adventure"]
+ *   }
+ * ]
  */
 router.get('/search', ensureLoggedIn, async (req, res, next) => {
     try {
@@ -54,15 +81,31 @@ router.get('/search', ensureLoggedIn, async (req, res, next) => {
  * POST /books
  * Adds a new book to the database.
  *
- * Request body parameters:
- *  - title (string) [required]
- *  - coverImage (string) [required]
- *  - yearPublished (integer) [required]
- *  - synopsis (string) [required]
- *
  * Authorization required: Admin only.
  *
+ * @body {string} title - Book title (required).
+ * @body {string} coverImage - URL of the cover image (required).
+ * @body {number} yearPublished - Year the book was published (required).
+ * @body {string} synopsis - Brief summary of the book (required).
+ *
  * @returns {Object} 201 - The newly added book.
+ * @example Request:
+ * POST /books
+ * {
+ *   "title": "Mistborn: The Final Empire",
+ *   "coverImage": "https://example.com/mistborn.jpg",
+ *   "yearPublished": 2006,
+ *   "synopsis": "A criminal mastermind discovers he has the power of Allomancy..."
+ * }
+ *
+ * @example Response:
+ * {
+ *   "id": 3,
+ *   "title": "Mistborn: The Final Empire",
+ *   "cover_image": "https://example.com/mistborn.jpg",
+ *   "year_published": 2006,
+ *   "synopsis": "A criminal mastermind discovers he has the power of Allomancy..."
+ * }
  */
 router.post('/', ensureAdmin, async (req, res, next) => {
     try {
@@ -84,7 +127,22 @@ router.post('/', ensureAdmin, async (req, res, next) => {
  *
  * Authorization required: Any logged-in user.
  *
+ * @param {string} id - The book's ID.
+ *
  * @returns {Object} 200 - The book details with authors and topics.
+ * @example Request:
+ * GET /books/1
+ *
+ * @example Response:
+ * {
+ *   "id": 1,
+ *   "title": "The Hobbit",
+ *   "cover_image": "https://example.com/hobbit.jpg",
+ *   "year_published": 1937,
+ *   "synopsis": "A hobbit embarks on a journey...",
+ *   "authors": ["J.R.R. Tolkien"],
+ *   "topics": ["Fantasy", "Adventure"]
+ * }
  */
 router.get('/:id', ensureLoggedIn, async (req, res, next) => {
     try {
@@ -102,13 +160,22 @@ router.get('/:id', ensureLoggedIn, async (req, res, next) => {
  *
  * Authorization required: Admin only.
  *
+ * @param {string} id - The book's ID.
+ *
  * @returns {Object} 200 - Confirmation message.
+ * @example Request:
+ * DELETE /books/1
+ *
+ * @example Response:
+ * {
+ *   "message": "Book deleted."
+ * }
  */
 router.delete('/:id', ensureAdmin, async (req, res, next) => {
     try {
         const deletedBook = await Book.deleteBook(req.params.id);
         if (!deletedBook) throw new NotFoundError(`Book with ID ${req.params.id} not found.`);
-        res.json({ message: `Book with ID ${req.params.id} deleted.` });
+        res.json({ message: "Book deleted." });
     } catch (err) {
         return next(err);
     }
