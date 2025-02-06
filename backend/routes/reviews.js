@@ -186,4 +186,68 @@ router.delete('/:id', ensureLoggedIn, async (req, res, next) => {
     }
 });
 
+/**
+ * PATCH /reviews/:id
+ * Updates a review (can change review text or rating).
+ *
+ * Authorization required: Only the user who wrote the review.
+ *
+ * @param {number} id - The review ID.
+ * @body {number} [rating] - The new rating (1-5) (optional).
+ * @body {string} [reviewText] - The new review text (optional).
+ *
+ * @returns {Object} 200 - The updated review.
+ * @example Request:
+ * PATCH /reviews/4
+ * {
+ *   "rating": 4,
+ *   "reviewText": "A great read, but a little slow at times."
+ * }
+ *
+ * @example Response:
+ * {
+ *   "id": 4,
+ *   "user_id": 8,
+ *   "book_id": 12,
+ *   "rating": 4,
+ *   "review_text": "A great read, but a little slow at times.",
+ *   "created_at": "2024-02-06T18:00:00.000Z"
+ * }
+ */
+router.patch('/:id', ensureLoggedIn, async (req, res, next) => {
+    try {
+        const reviewId = req.params.id;
+        const userId = res.locals.user.userId;
+        const { rating, reviewText } = req.body;
+
+        // Validate input (at least one field must be provided)
+        if (rating === undefined && reviewText === undefined) {
+            throw new BadRequestError("At least one field (rating or reviewText) must be provided.");
+        }
+
+        if (rating !== undefined && (rating < 1 || rating > 5)) {
+            throw new BadRequestError("Rating must be between 1 and 5.");
+        }
+
+        // Check if review exists and if the user is the owner
+        const isOwner = await Review.isReviewOwner(reviewId, userId);
+
+        if (isOwner === null) {
+            throw new NotFoundError(`Review with ID ${reviewId} not found.`);
+        }
+
+        if (!isOwner) {
+            throw new UnauthorizedError("You do not have permission to update this review.");
+        }
+
+        // Update the review
+        const updatedReview = await Review.updateReview(reviewId, rating, reviewText);
+        res.json(updatedReview);
+
+    } catch (err) {
+        return next(err);
+    }
+});
+
+
 module.exports = router;

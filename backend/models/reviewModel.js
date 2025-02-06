@@ -122,4 +122,24 @@ class Review {
     }
 }
 
+/**
+ * Updates a review (rating and/or review text).
+ *
+ * @param {number} reviewId - The ID of the review.
+ * @param {number|null} rating - The new rating (optional).
+ * @param {string|null} reviewText - The new review text (optional).
+ * @returns {Promise<Object>} The updated review.
+ */
+static async updateReview(reviewId, rating, reviewText) {
+    const result = await db.query(`
+        UPDATE reviews
+        SET rating = COALESCE($1, rating),
+            review_text = COALESCE($2, review_text)
+        WHERE id = $3
+        RETURNING id, user_id, book_id, rating, review_text, created_at
+    `, [rating, reviewText, reviewId]);
+
+    return result.rows[0] || null;
+}
+
 module.exports = Review;
