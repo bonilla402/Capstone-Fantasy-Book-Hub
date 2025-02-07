@@ -222,6 +222,67 @@ class Group {
 
         return result.rows.length > 0;
     }
+
+    /**
+     * Searches for groups matching book details or group details using AND logic.
+     *
+     * @param {string|null} author - The book author to search for.
+     * @param {string|null} title - The book title to search for.
+     * @param {string|null} topic - The book topic to search for.
+     * @param {string|null} groupTitle - The group title to search for.
+     * @param {string|null} groupDescription - The group description to search for.
+     * @returns {Promise<Object[]>} List of matching groups.
+     */
+    static async searchGroups(author, title, topic, groupTitle, groupDescription) {
+        const conditions = [];
+        const values = [];
+
+        if (author) {
+            conditions.push(`a.name ILIKE $${values.length + 1}`);
+            values.push(`%${author}%`);
+        }
+        if (title) {
+            conditions.push(`b.title ILIKE $${values.length + 1}`);
+            values.push(`%${title}%`);
+        }
+        if (topic) {
+            conditions.push(`t.name ILIKE $${values.length + 1}`);
+            values.push(`%${topic}%`);
+        }
+        if (groupTitle) {
+            conditions.push(`g.group_name ILIKE $${values.length + 1}`);
+            values.push(`%${groupTitle}%`);
+        }
+        if (groupDescription) {
+            conditions.push(`g.description ILIKE $${values.length + 1}`);
+            values.push(`%${groupDescription}%`);
+        }
+
+        if (conditions.length === 0) {
+            throw new BadRequestError("At least one search field must be provided.");
+        }
+
+        // Apply AND logic by joining conditions with AND instead of OR
+        const whereClause = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+
+        console.log("Executing Query with Params:", values); // Debugging log
+
+        const result = await db.query(`
+            SELECT DISTINCT g.id, g.group_name, g.description, g.created_at, u.username AS created_by
+            FROM discussion_groups g
+                     LEFT JOIN group_discussions d ON g.id = d.group_id
+                     LEFT JOIN books b ON d.book_id = b.id
+                     LEFT JOIN book_authors ba ON ba.book_id = b.id
+                     LEFT JOIN authors a ON ba.author_id = a.id
+                     LEFT JOIN book_topics bt ON bt.book_id = b.id
+                     LEFT JOIN topics t ON bt.topic_id = t.id
+                     JOIN users u ON g.created_by = u.id
+                ${whereClause}
+            ORDER BY g.created_at DESC
+        `, values);
+
+        return result.rows;
+    }
 }
 
 module.exports = Group;
