@@ -91,6 +91,56 @@ class Discussion {
     }
 
     /**
+     * Retrieves a single discussion by ID, including book details.
+     *
+     * @param {number} discussionId - The ID of the discussion.
+     * @returns {Promise<Object|null>} The discussion or null if not found.
+     * @example Response:
+     * {
+     *   "id": 12,
+     *   "group_id": 5,
+     *   "book": {
+     *     "id": 20,
+     *     "title": "Dune",
+     *     "cover_image": "https://example.com/dune.jpg"
+     *   },
+     *   "title": "Exploring Science Fiction",
+     *   "content": "Let's discuss the themes in Dune.",
+     *   "created_by": "sci-fi_reader",
+     *   "created_at": "2024-02-06T14:00:00.000Z"
+     * }
+     */
+    static async getDiscussionById(discussionId) {
+        const result = await db.query(`
+            SELECT d.id, d.group_id, d.title, d.content, d.created_at,
+                   d.user_id, u.username AS created_by,
+                   b.id AS book_id, b.title AS book_title, b.cover_image
+            FROM group_discussions d
+            JOIN users u ON d.user_id = u.id
+            JOIN books b ON d.book_id = b.id
+            WHERE d.id = $1
+        `, [discussionId]);
+
+        if (result.rows.length === 0) return null;
+
+        const row = result.rows[0];
+
+        return {
+            id: row.id,
+            group_id: row.group_id,
+            book: {
+                id: row.book_id,
+                title: row.book_title,
+                cover_image: row.cover_image
+            },
+            title: row.title,
+            content: row.content,
+            created_by: row.created_by,
+            created_at: row.created_at
+        };
+    }
+
+    /**
      * Checks if a user is the creator of a discussion.
      *
      * @param {number} discussionId - The ID of the discussion.

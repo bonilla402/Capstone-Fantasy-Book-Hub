@@ -204,6 +204,24 @@ class Group {
 
         return result.rows;
     }
+
+    /**
+     * Checks if a user is the creator of a given group.
+     *
+     * @param {number} groupId - The ID of the group.
+     * @param {number} userId - The ID of the user.
+     * @returns {Promise<boolean>} True if the user is the group creator, false otherwise.
+     * @example Response:
+     * true
+     */
+    static async isGroupCreator(groupId, userId) {
+        const result = await db.query(`
+            SELECT 1 FROM discussion_groups
+            WHERE id = $1 AND created_by = $2
+        `, [groupId, userId]);
+
+        return result.rows.length > 0;
+    }
 }
 
 module.exports = Group;
