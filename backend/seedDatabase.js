@@ -47,7 +47,7 @@ async function seedDatabase() {
 
         // Step 3: Create tables
         const schemaSQL = `
-            DROP TABLE IF EXISTS book_topics, book_authors, books, authors, topics, users, discussion_groups, group_discussions, reviews CASCADE;
+            DROP TABLE IF EXISTS book_topics, book_authors, books, authors, topics, users, discussion_groups, group_discussions, reviews, group_members, discussion_messages CASCADE;
 
             CREATE TABLE users (
                                    id SERIAL PRIMARY KEY,
@@ -125,6 +125,14 @@ async function seedDatabase() {
                                            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                                            group_id INTEGER NOT NULL REFERENCES discussion_groups(id) ON DELETE CASCADE,
                                            PRIMARY KEY (user_id, group_id)
+            );
+
+            CREATE TABLE discussion_messages (
+                                                 id SERIAL PRIMARY KEY,
+                                                 discussion_id INTEGER NOT NULL REFERENCES group_discussions(id) ON DELETE CASCADE,
+                                                 user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+                                                 content TEXT NOT NULL,
+                                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
         `;

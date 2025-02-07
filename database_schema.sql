@@ -86,3 +86,12 @@ CREATE TABLE group_members (
                                group_id INTEGER NOT NULL REFERENCES discussion_groups(id) ON DELETE CASCADE,
                                PRIMARY KEY (user_id, group_id)
 );
+
+CREATE TABLE discussion_messages (
+                                     id SERIAL PRIMARY KEY,
+                                     discussion_id INTEGER NOT NULL REFERENCES discussions(id) ON DELETE CASCADE,
+                                     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+                                     content TEXT NOT NULL,
+                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
