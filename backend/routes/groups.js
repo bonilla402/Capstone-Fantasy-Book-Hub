@@ -2,7 +2,7 @@
 const router = express.Router();
 const { ensureLoggedIn } = require('../middleware/auth');
 const { UnauthorizedError, BadRequestError, NotFoundError } = require('../helpers/expressError');
-const DiscussionGroup = require('../models/discussionGroupModel');
+const Group = require('../models/groupModel');
 
 /**
  * GET /groups
@@ -23,7 +23,7 @@ const DiscussionGroup = require('../models/discussionGroupModel');
  */
 router.get('/', ensureLoggedIn, async (req, res, next) => {
     try {
-        const groups = await DiscussionGroup.getAllGroups();
+        const groups = await Group.getAllGroups();
         res.json(groups);
     } catch (err) {
         return next(err);
@@ -38,7 +38,7 @@ router.get('/', ensureLoggedIn, async (req, res, next) => {
  */
 router.get('/:id', ensureLoggedIn, async (req, res, next) => {
     try {
-        const group = await DiscussionGroup.getGroupById(req.params.id);
+        const group = await Group.getGroupById(req.params.id);
         if (!group) throw new NotFoundError("Discussion group not found.");
         res.json(group);
     } catch (err) {
@@ -57,7 +57,7 @@ router.post('/', ensureLoggedIn, async (req, res, next) => {
         const { groupName, description } = req.body;
         if (!groupName) throw new BadRequestError("Group name is required.");
 
-        const newGroup = await DiscussionGroup.createGroup(groupName, description, res.locals.user.userId);
+        const newGroup = await Group.createGroup(groupName, description, res.locals.user.userId);
         res.status(201).json(newGroup);
     } catch (err) {
         return next(err);
@@ -81,12 +81,12 @@ router.patch('/:id', ensureLoggedIn, async (req, res, next) => {
             throw new BadRequestError("At least one field (groupName or description) must be provided.");
         }
 
-        const isOwner = await DiscussionGroup.isGroupOwner(groupId, userId);
+        const isOwner = await Group.isGroupOwner(groupId, userId);
         if (!isAdmin && !isOwner) {
             throw new UnauthorizedError("You do not have permission to update this group.");
         }
 
-        const updatedGroup = await DiscussionGroup.updateGroup(groupId, groupName, description);
+        const updatedGroup = await Group.updateGroup(groupId, groupName, description);
         if (!updatedGroup) throw new NotFoundError("Group not found.");
 
         res.json(updatedGroup);
@@ -107,12 +107,12 @@ router.delete('/:id', ensureLoggedIn, async (req, res, next) => {
         const userId = res.locals.user.userId;
         const isAdmin = res.locals.user.isAdmin;
 
-        const isOwner = await DiscussionGroup.isGroupOwner(groupId, userId);
+        const isOwner = await Group.isGroupOwner(groupId, userId);
         if (!isAdmin && !isOwner) {
             throw new UnauthorizedError("You do not have permission to delete this group.");
         }
 
-        await DiscussionGroup.deleteGroup(groupId);
+        await Group.deleteGroup(groupId);
         res.json({ message: "Group deleted." });
     } catch (err) {
         return next(err);
@@ -131,10 +131,10 @@ router.post('/:id/join', ensureLoggedIn, async (req, res, next) => {
         const userId = res.locals.user.userId;
 
         // Ensure user is not already in the group
-        const isMember = await DiscussionGroup.isUserInGroup(groupId, userId);
+        const isMember = await Group.isUserInGroup(groupId, userId);
         if (isMember) throw new BadRequestError("User is already in the group.");
 
-        const result = await DiscussionGroup.addUserToGroup(groupId, userId);
+        const result = await Group.addUserToGroup(groupId, userId);
         res.json({ message: "User added to group.", group_id: result.group_id, user_id: result.user_id });
 
     } catch (err) {
@@ -154,10 +154,10 @@ router.delete('/:id/leave', ensureLoggedIn, async (req, res, next) => {
         const userId = res.locals.user.userId;
 
         // Ensure user is in the group before removing
-        const isMember = await DiscussionGroup.isUserInGroup(groupId, userId);
+        const isMember = await Group.isUserInGroup(groupId, userId);
         if (!isMember) throw new BadRequestError("User is not a member of this group.");
 
-        await DiscussionGroup.removeUserFromGroup(groupId, userId);
+        await Group.removeUserFromGroup(groupId, userId);
         res.json({ message: "User removed from group." });
 
     } catch (err) {
@@ -179,17 +179,17 @@ router.get('/:id/members', ensureLoggedIn, async (req, res, next) => {
 
         // Allow if user is an admin
         if (isAdmin) {
-            const members = await DiscussionGroup.getGroupMembers(groupId);
+            const members = await Group.getGroupMembers(groupId);
             return res.json(members);
         }
 
         // Check if user is a member of the group
-        const isMember = await DiscussionGroup.isUserInGroup(groupId, userId);
+        const isMember = await Group.isUserInGroup(groupId, userId);
         if (!isMember) {
             throw new UnauthorizedError("You must be a group member or an admin to view members.");
         }
 
-        const members = await DiscussionGroup.getGroupMembers(groupId);
+        const members = await Group.getGroupMembers(groupId);
         res.json(members);
     } catch (err) {
         return next(err);

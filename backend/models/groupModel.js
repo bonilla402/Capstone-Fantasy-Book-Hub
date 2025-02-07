@@ -1,6 +1,6 @@
 ﻿const db = require('../config/db');
 
-class DiscussionGroup {
+class Group {
     /**
      * Retrieves all discussion groups.
      *
@@ -206,4 +206,4 @@ class DiscussionGroup {
     }
 }
 
-module.exports = DiscussionGroup;
+module.exports = Group;
