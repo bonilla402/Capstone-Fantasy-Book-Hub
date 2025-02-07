@@ -10,6 +10,7 @@ const topicRoutes = require('./topics');
 const reviewRoutes = require('./reviews');
 const groupsRoutes = require('./groups');
 const discussionsRoutes = require('./discussions');
+const messagesRoutes = require('./messages');
 
 // Use routes (without '/api', since it's handled in app.js)
 router.use('/auth', authRoutes);
@@ -20,5 +21,6 @@ router.use('/topics', topicRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/groups', groupsRoutes);
 router.use('/discussions', discussionsRoutes);
+router.use('/messages', messagesRoutes);
 
 module.exports = router;
