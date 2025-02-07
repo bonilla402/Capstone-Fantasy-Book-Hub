@@ -34,7 +34,9 @@ router.get('/:groupId', ensureLoggedIn, async (req, res, next) => {
         const isAdmin = res.locals.user.isAdmin;
 
         const isMember = await Group.isUserInGroup(groupId, userId);
-        if (!isAdmin && !isMember) {
+        const isGroupCreator = await Group.isGroupCreator(groupId, userId);
+
+        if (!isMember && !isGroupCreator) {
             throw new UnauthorizedError("You must be a group member or an admin to view discussions.");
         }
 
@@ -62,8 +64,10 @@ router.post('/:groupId', ensureLoggedIn, async (req, res, next) => {
         }
 
         const isMember = await Group.isUserInGroup(groupId, userId);
-        if (!isMember) {
-            throw new UnauthorizedError("You must be a group member to create discussions.");
+        const isGroupCreator = await Group.isGroupCreator(groupId, userId);
+
+        if (!isMember && !isGroupCreator) {
+            throw new UnauthorizedError("You must be a group member or the group creator to create discussions.");
         }
 
         const newDiscussion = await Discussion.createDiscussion(groupId, userId, bookId, title, content);
