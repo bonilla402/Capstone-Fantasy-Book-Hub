@@ -1,5 +1,5 @@
 ﻿<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="React Debug" type="JavascriptDebugType" uri="http://localhost:3001/">
+  <configuration default="false" name="React Debug" type="JavascriptDebugType" uri="http://localhost:3001/" useFirstLineBreakpoints="true">
     <method v="2" />
   </configuration>
 </component>
