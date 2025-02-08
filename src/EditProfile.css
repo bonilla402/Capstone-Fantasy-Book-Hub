@@ -64,3 +64,27 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+/* Common error message styling */
+.error-text {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    background-color: #ffe6e6;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ff9999;
+    text-align: center;
+}
+
+/* Success message styling */
+.success-text {
+    color: green;
+    font-size: 14px;
+    margin-top: 10px;
+    background-color: #e6ffe6;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #99ff99;
+    text-align: center;
+}
