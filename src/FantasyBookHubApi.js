@@ -27,6 +27,13 @@ class FantasyBookHubApi {
         return await this.request("auth/login", {email, password}, "post");
     }
 
+    static async register(username, email, password) {
+        const res = await this.request("auth/register", { username, email, password }, "post");
+        this.token = res.token;
+        localStorage.setItem("token", this.token);
+        return res; // ✅ Now returns { token, user }
+    }
+
     // Fetch user details by email
     static async getUserByEmail(email) {
         return await this.request(`users/email/${email}`);
