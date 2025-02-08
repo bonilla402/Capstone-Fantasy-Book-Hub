@@ -1,12 +1,18 @@
-﻿import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useUser } from "./UserContext";
 import FantasyBookHubApi from "./FantasyBookHubApi";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const { dispatch } = useUser();
+    const { user, dispatch } = useUser();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [error, setError] = useState(null);
 
+    useEffect(() => {
+        if (user) navigate("/");
+    }, [user, navigate]);
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -28,6 +34,9 @@ const Login = () => {
 
             // Step 2: Store token and user in Context
             dispatch({ type: "LOGIN", payload: { user, token } });
+
+            // Step 3: Redirect to Home
+            navigate("/");
         } catch (err) {
             setError(err[0]); // Show first error message
         }
