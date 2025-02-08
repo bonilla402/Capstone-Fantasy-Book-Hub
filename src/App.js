@@ -1,11 +1,15 @@
 import React from "react";
+import { UserProvider } from "./UserContext";
+import NavBar from "./NavBar";
+import Routes from "./Routes";
 
 function App() {
-  return (
-      <div>
-        <h1>Fantasy Book Hub</h1>
-      </div>
-  );
+    return (
+        <UserProvider>
+            <NavBar />
+            <Routes />
+        </UserProvider>
+    );
 }
 
 export default App;
