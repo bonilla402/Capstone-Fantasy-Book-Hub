@@ -2,6 +2,7 @@
 import { useUser } from "./UserContext";
 import FantasyBookHubApi from "./FantasyBookHubApi";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 const Login = () => {
     const { user, dispatch } = useUser();
@@ -12,7 +13,7 @@ const Login = () => {
     useEffect(() => {
         if (user) navigate("/");
     }, [user, navigate]);
-    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -23,32 +24,27 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null); // Clear previous errors
+        setError(null);
 
         try {
-            // Step 1: Login and get the token + user
             const { token, user } = await FantasyBookHubApi.login(
                 formData.email,
                 formData.password
             );
-
-            // Step 2: Store token and user in Context
             dispatch({ type: "LOGIN", payload: { user, token } });
-
-            // Step 3: Redirect to Home
             navigate("/");
         } catch (err) {
-            setError(err[0]); // Show first error message
+            setError(err[0]);
         }
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Email:
+        <div className="login-page">
+            <div className="login-container">
+                <h2>Login</h2>
+                {error && <p className="error-text">{error}</p>}
+                <form className="login-form" onSubmit={handleSubmit}>
+                    <label>Email:</label>
                     <input
                         type="email"
                         name="email"
@@ -56,10 +52,7 @@ const Login = () => {
                         onChange={handleChange}
                         required
                     />
-                </label>
-                <br />
-                <label>
-                    Password:
+                    <label>Password:</label>
                     <input
                         type="password"
                         name="password"
@@ -67,10 +60,9 @@ const Login = () => {
                         onChange={handleChange}
                         required
                     />
-                </label>
-                <br />
-                <button type="submit">Login</button>
-            </form>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
         </div>
     );
 };

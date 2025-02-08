@@ -2,6 +2,7 @@
 import { useUser } from "./UserContext";
 import FantasyBookHubApi from "./FantasyBookHubApi";
 import { useNavigate } from "react-router-dom";
+import "./Register.css";
 
 const Register = () => {
     const { user, dispatch } = useUser();
@@ -18,7 +19,7 @@ const Register = () => {
     useEffect(() => {
         if (user) navigate("/");
     }, [user, navigate]);
-    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -29,33 +30,28 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null); // Clear previous errors
+        setError(null);
 
         try {
-            // Step 1: Register user and get token + user details
             const { token, user } = await FantasyBookHubApi.register(
                 formData.username,
                 formData.email,
                 formData.password
             );
-
-            // Step 2: Store token and user in Context
             dispatch({ type: "LOGIN", payload: { user, token } });
-
-            // Step 3: Redirect to Home
             navigate("/");
         } catch (err) {
-            setError(err[0]); // Show first error message
+            setError(err[0]);
         }
     };
 
     return (
-        <div>
-            <h2>Register</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
+        <div className="register-page">
+            <div className="register-container">
+                <h2>Register</h2>
+                {error && <p className="error-text">{error}</p>}
+                <form className="register-form" onSubmit={handleSubmit}>
+                    <label>Username:</label>
                     <input
                         type="text"
                         name="username"
@@ -63,10 +59,7 @@ const Register = () => {
                         onChange={handleChange}
                         required
                     />
-                </label>
-                <br />
-                <label>
-                    Email:
+                    <label>Email:</label>
                     <input
                         type="email"
                         name="email"
@@ -74,10 +67,7 @@ const Register = () => {
                         onChange={handleChange}
                         required
                     />
-                </label>
-                <br />
-                <label>
-                    Password:
+                    <label>Password:</label>
                     <input
                         type="password"
                         name="password"
@@ -85,10 +75,9 @@ const Register = () => {
                         onChange={handleChange}
                         required
                     />
-                </label>
-                <br />
-                <button type="submit">Register</button>
-            </form>
+                    <button type="submit">Register</button>
+                </form>
+            </div>
         </div>
     );
 };

@@ -2,6 +2,7 @@
 import { useUser } from "./UserContext";
 import FantasyBookHubApi from "./FantasyBookHubApi";
 import { useNavigate } from "react-router-dom";
+import "./EditProfile.css";
 
 const EditProfile = () => {
     const { user, dispatch } = useUser();
@@ -48,13 +49,13 @@ const EditProfile = () => {
     };
 
     return (
-        <div>
-            <h2>Edit Profile</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            {success && <p style={{ color: "green" }}>Profile updated successfully!</p>}
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
+        <div className="edit-profile-page">
+            <div className="edit-profile-container">
+                <h2>Edit Profile</h2>
+                {error && <p className="error-text">{error}</p>}
+                {success && <p className="success-text">Profile updated successfully!</p>}
+                <form className="edit-profile-form" onSubmit={handleSubmit}>
+                    <label>Username:</label>
                     <input
                         type="text"
                         name="username"
@@ -62,10 +63,7 @@ const EditProfile = () => {
                         onChange={handleChange}
                         required
                     />
-                </label>
-                <br />
-                <label>
-                    Email:
+                    <label>Email:</label>
                     <input
                         type="email"
                         name="email"
@@ -73,10 +71,7 @@ const EditProfile = () => {
                         onChange={handleChange}
                         required
                     />
-                </label>
-                <br />
-                <label>
-                    New Password (Optional):
+                    <label>New Password (Optional):</label>
                     <input
                         type="password"
                         name="password"
@@ -84,10 +79,9 @@ const EditProfile = () => {
                         onChange={handleChange}
                         placeholder="Leave blank to keep current password"
                     />
-                </label>
-                <br />
-                <button type="submit">Update Profile</button>
-            </form>
+                    <button type="submit">Update Profile</button>
+                </form>
+            </div>
         </div>
     );
 };
