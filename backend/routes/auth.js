@@ -25,11 +25,13 @@ router.post('/register', async (req, res, next) => {
     }
 });
 
-/** POST /auth/login { email, password } => { token }
- *  Authenticates a user and returns a JWT token.
- *  Authorization required: None
+
+/**
+ * POST /auth/login { email, password } => { token, user }
+ * Authenticates a user and returns a JWT token + user details.
+ * Authorization required: None
  */
-router.post('/login', async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) throw new BadRequestError("Email and password required.");
@@ -41,9 +43,17 @@ router.post('/login', async (req, res, next) => {
         const isValid = await compare(password, user.password_hash);
         if (!isValid) throw new UnauthorizedError("Invalid email/password.");
 
-        const token = jwt.sign({ userId: user.id, isAdmin: user.is_admin }, SECRET_KEY, { expiresIn: '24h' });
+        // Generate JWT token
+        const token = jwt.sign(
+            { userId: user.id, isAdmin: user.is_admin },
+            SECRET_KEY,
+            { expiresIn: "24h" }
+        );
 
-        return res.json({ token });
+        // Remove sensitive data before sending response
+        delete user.password_hash;
+
+        return res.json({ token, user });
     } catch (err) {
         return next(err);
     }
