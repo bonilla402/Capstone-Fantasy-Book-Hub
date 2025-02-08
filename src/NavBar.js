@@ -1,12 +1,12 @@
 ﻿import React from "react";
-import {Link} from "react-router-dom";
-import {useUser} from "./UserContext";
+import { Link } from "react-router-dom";
+import { useUser } from "./UserContext";
 
 const NavBar = () => {
-    const {user, dispatch} = useUser();
+    const { user, dispatch } = useUser();
 
     const handleLogout = () => {
-        dispatch({type: "LOGOUT"});
+        dispatch({ type: "LOGOUT" });
     };
 
     return (
@@ -19,7 +19,10 @@ const NavBar = () => {
                     <button onClick={handleLogout}>Logout</button>
                 </>
             ) : (
-                <Link to="/login">Login</Link>
+                <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                </>
             )}
         </nav>
     );
