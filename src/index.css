@@ -1,21 +1,31 @@
-/* Home.css */
-
-.home-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: calc(100vh - 70px);
-  width: 100%;
-  text-align: center;
+body {
+  font-family: 'Garamond', serif;
+  background-color: #f5e6ca; /* Aged paper color */
+  color: #4a2f27; /* Dark brown for readability */
+  margin: 0;
+  padding: 0;
 }
 
-.home-container h1 {
-  color: #333;
-  font-size: 2.5rem;
+button {
+  font-family: 'Garamond', serif;
+  background-color: #c46728; /* Burnt orange */
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
 }
 
-.home-container p {
-  font-size: 1.5rem;
-  color: #555;
+button:hover {
+  background-color: #9b4d1e; /* Darker orange */
+}
+
+/* Vintage Paper Texture */
+.vintage-container {
+  background-color: #f5e6ca;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }

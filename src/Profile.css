@@ -1,11 +1,13 @@
-﻿.profile-page {
+﻿/* Profile.css - Library Card Look */
+
+.profile-page {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     height: 100vh;
     width: 100%;
     padding-top: 50px;
-    background-color: #f8f8f8;
+    background-color: #f5e6ca; /* Aged paper color */
     box-sizing: border-box;
 }
 
@@ -15,20 +17,23 @@
     background: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
-    box-sizing: border-box;
+    font-family: 'Garamond', serif;
+    border: 1px solid #9b4d1e; /* Dark burnt orange border */
 }
 
+/* Typography */
 .profile-container h2 {
-    margin-bottom: 15px;
-    color: #333;
+    font-size: 2rem;
+    color: #9b4d1e; /* Burnt orange */
 }
 
+/* Profile Info Styling */
 .profile-info {
     text-align: left;
     font-size: 16px;
-    color: #555;
+    color: #4a2f27; /* Dark brown */
     margin-bottom: 20px;
 }
 
@@ -36,17 +41,21 @@
     margin: 10px 0;
 }
 
+/* Button Styling */
 button {
     width: 100%;
     padding: 10px;
-    background-color: #007BFF;
+    background-color: #c46728; /* Burnt orange */
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
+    font-family: 'Garamond', serif;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #9b4d1e; /* Darker orange */
 }

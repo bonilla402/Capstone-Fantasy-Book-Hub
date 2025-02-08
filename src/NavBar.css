@@ -1,55 +1,43 @@
-﻿/* NavBar.css */
-
+﻿/* Navbar - Vintage Woodgrain Look */
 .navbar {
-    background-color: #007BFF;
+    background: linear-gradient(to right, #c46728, #9b4d1e); /* Warm wood tone */
     padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    box-sizing: border-box;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    max-width: 100%;
     z-index: 1000;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
+    font-family: 'Garamond', serif;
 }
 
-.nav-left {
+/* Ensure Links Fit Properly */
+.nav-links {
     display: flex;
     align-items: center;
+    gap: 20px;
 }
 
-.nav-right {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-}
-
-.nav-link {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
+/* General Link Styling - Applies to ALL Links */
+.nav-link, .nav-user {
     font-size: 18px;
-}
-
-.nav-link:hover {
-    text-decoration: underline;
-}
-
-.nav-user {
-    cursor: pointer;
     font-weight: bold;
-    color: white;
+    color: #f5e6ca; /* Aged paper effect */
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out, text-decoration 0.3s ease-in-out;
 }
 
-.body-content {
-    margin-top: 70px;
-    padding: 20px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
+/* Ensure nav-user follows the same style */
+.nav-user {
+    text-decoration: none !important;
+}
+
+/* Hover Effect - ALL Links */
+.nav-link:hover, .nav-user:hover {
+    color: #ffd699; /* Lighter aged paper */
+    text-decoration: underline;
 }

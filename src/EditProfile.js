@@ -2,7 +2,7 @@
 import { useUser } from "./UserContext";
 import FantasyBookHubApi from "./FantasyBookHubApi";
 import { useNavigate } from "react-router-dom";
-import "./EditProfile.css";
+import "./Form.css"; // Uses the shared form styling
 
 const EditProfile = () => {
     const { user, dispatch } = useUser();
@@ -49,12 +49,12 @@ const EditProfile = () => {
     };
 
     return (
-        <div className="edit-profile-page">
-            <div className="edit-profile-container">
+        <div className="form-page">
+            <div className="form-container">
                 <h2>Edit Profile</h2>
                 {error && <p className="error-text">{error}</p>}
                 {success && <p className="success-text">Profile updated successfully!</p>}
-                <form className="edit-profile-form" onSubmit={handleSubmit}>
+                <form className="form" onSubmit={handleSubmit}>
                     <label>Username:</label>
                     <input
                         type="text"

@@ -1,34 +1,28 @@
 ﻿import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useUser } from "./UserContext";
 import "./NavBar.css";
 
 const NavBar = () => {
     const { user, dispatch } = useUser();
-    const navigate = useNavigate();
 
     const handleLogout = () => {
         dispatch({ type: "LOGOUT" });
-        navigate("/"); // Redirect to home after logout
     };
 
     return (
         <nav className="navbar">
-            <div className="nav-left">
-                <Link to="/" className="nav-link">Home</Link>
-            </div>
-            <div className="nav-right">
+            <NavLink to="/" className="nav-link">Home</NavLink>
+            <div className="nav-links">
                 {user ? (
                     <>
-                        <span className="nav-user" onClick={() => navigate("/profile")}>
-                            {user.username}
-                        </span>
-                        <Link to="/" className="nav-link" onClick={handleLogout}>Logout</Link>
+                        <NavLink to="/profile" className="nav-link nav-user">{user.username}</NavLink>
+                        <NavLink to="/" onClick={handleLogout} className="nav-link">Logout</NavLink>
                     </>
                 ) : (
                     <>
-                        <Link to="/login" className="nav-link">Login</Link>
-                        <Link to="/register" className="nav-link">Register</Link>
+                        <NavLink to="/login" className="nav-link">Login</NavLink>
+                        <NavLink to="/register" className="nav-link">Register</NavLink>
                     </>
                 )}
             </div>

@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import { useUser } from "./UserContext";
 import { useNavigate } from "react-router-dom";
-import "./Profile.css";
+import "./Profile.css"; // Uses the vintage styling for profile
 
 const Profile = () => {
     const { user } = useUser();

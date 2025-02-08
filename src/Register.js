@@ -2,18 +2,12 @@
 import { useUser } from "./UserContext";
 import FantasyBookHubApi from "./FantasyBookHubApi";
 import { useNavigate } from "react-router-dom";
-import "./Register.css";
+import "./Form.css"; // Uses the shared form styling
 
 const Register = () => {
     const { user, dispatch } = useUser();
     const navigate = useNavigate();
-
-    const [formData, setFormData] = useState({
-        username: "",
-        email: "",
-        password: "",
-    });
-
+    const [formData, setFormData] = useState({ username: "", email: "", password: "" });
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -46,11 +40,11 @@ const Register = () => {
     };
 
     return (
-        <div className="register-page">
-            <div className="register-container">
+        <div className="form-page">
+            <div className="form-container">
                 <h2>Register</h2>
                 {error && <p className="error-text">{error}</p>}
-                <form className="register-form" onSubmit={handleSubmit}>
+                <form className="form" onSubmit={handleSubmit}>
                     <label>Username:</label>
                     <input
                         type="text"

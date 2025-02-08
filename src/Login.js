@@ -2,7 +2,7 @@
 import { useUser } from "./UserContext";
 import FantasyBookHubApi from "./FantasyBookHubApi";
 import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import "./Form.css"; // Applies the shared form styling
 
 const Login = () => {
     const { user, dispatch } = useUser();
@@ -39,11 +39,11 @@ const Login = () => {
     };
 
     return (
-        <div className="login-page">
-            <div className="login-container">
+        <div className="form-page">
+            <div className="form-container">
                 <h2>Login</h2>
                 {error && <p className="error-text">{error}</p>}
-                <form className="login-form" onSubmit={handleSubmit}>
+                <form className="form" onSubmit={handleSubmit}>
                     <label>Email:</label>
                     <input
                         type="email"

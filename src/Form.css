@@ -1,71 +1,85 @@
-﻿/* EditProfile.css */
+﻿/* Vintage Library Card Look for Forms */
 
-.edit-profile-page {
+.form-page {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     height: 100vh;
     width: 100%;
     padding-top: 50px;
-    background-color: #f8f8f8;
+    background-color: #f5e6ca; /* Aged paper color */
     box-sizing: border-box;
 }
 
-.edit-profile-container {
+.form-container {
     width: 100%;
     max-width: 400px;
     background: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
-    box-sizing: border-box;
+    font-family: 'Garamond', serif;
+    border: 1px solid #9b4d1e; /* Dark burnt orange border */
 }
 
-/* Form Styling */
-.edit-profile-form {
+/* Typography */
+.form-container h2 {
+    font-size: 2rem;
+    color: #9b4d1e; /* Burnt orange */
+}
+
+/* Form Input Styling */
+.form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.edit-profile-form label {
+.form label {
     font-size: 14px;
     font-weight: bold;
     text-align: left;
     display: block;
     margin-bottom: 5px;
+    color: #4a2f27; /* Dark brown */
 }
 
-.edit-profile-form input {
-    padding: 10px;
-    border: 1px solid #ccc;
+.form input {
+    padding: 12px;
+    border: 1px solid #7a5230; /* Muted brown border */
     border-radius: 5px;
     font-size: 16px;
+    background-color: #f9f3e8; /* Aged paper color */
+    color: #4a2f27;
     box-sizing: border-box;
 }
 
-.edit-profile-form input:focus {
-    border-color: #007BFF;
-    box-shadow: 0px 0px 4px rgba(0, 123, 255, 0.5);
+.form input:focus {
+    border-color: #c46728;
+    box-shadow: 0px 0px 4px rgba(196, 103, 40, 0.5);
 }
 
+/* Button Styling */
 button {
     width: 100%;
     padding: 10px;
-    background-color: #007BFF;
+    background-color: #c46728; /* Burnt orange */
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
+    font-family: 'Garamond', serif;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #9b4d1e; /* Darker orange */
 }
 
-/* Common error message styling */
+/* Error & Success Messages */
 .error-text {
     color: red;
     font-size: 14px;
@@ -77,7 +91,6 @@ button:hover {
     text-align: center;
 }
 
-/* Success message styling */
 .success-text {
     color: green;
     font-size: 14px;
