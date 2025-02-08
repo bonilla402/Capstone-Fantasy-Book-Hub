@@ -1,12 +1,14 @@
 ﻿import React from "react";
-import { Link } from "react-router-dom";
-import { useUser } from "./UserContext";
+import {Link, useNavigate} from "react-router-dom";
+import {useUser} from "./UserContext";
 
 const NavBar = () => {
-    const { user, dispatch } = useUser();
+    const {user, dispatch} = useUser();
+    const navigate = useNavigate();
 
     const handleLogout = () => {
-        dispatch({ type: "LOGOUT" });
+        dispatch({type: "LOGOUT"});
+        navigate("/"); // ✅ Redirect to home after logout
     };
 
     return (
@@ -15,8 +17,10 @@ const NavBar = () => {
 
             {user ? (
                 <>
-                    <span>Welcome, {user.username}!</span>
-                    <button onClick={handleLogout}>Logout</button>
+                    <span onClick={() => navigate("/profile")} style={{cursor: "pointer", textDecoration: "underline"}}>
+                        {user.username}!
+                    </span>
+                    <Link to="/" onClick={handleLogout}>Logout</Link>
                 </>
             ) : (
                 <>

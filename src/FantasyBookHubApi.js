@@ -39,6 +39,11 @@ class FantasyBookHubApi {
         return await this.request(`users/email/${email}`);
     }
 
+    // Update user details
+    static async updateUser(userId, data) {
+        return await this.request(`users/${userId}`, data, "patch");
+    }
+
     static logout() {
         localStorage.removeItem("token");
     }
