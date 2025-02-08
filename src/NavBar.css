@@ -1,7 +1,7 @@
 ﻿/* Navbar - Vintage Woodgrain Look */
 .navbar {
-    background: linear-gradient(to right, #c46728, #9b4d1e); /* Warm wood tone */
-    padding: 15px;
+    background: linear-gradient(to right, #c46728, #9b4d1e);
+    padding-right: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -14,18 +14,29 @@
     font-family: 'Garamond', serif;
 }
 
-/* Ensure Links Fit Properly */
+/* Logo Styling */
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo {
+    height: 100px; /* Adjust height as needed */
+    width: auto;
+    object-fit: contain;
+}
+
+/* Navbar Links */
 .nav-links {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-/* General Link Styling - Applies to ALL Links */
-.nav-link, .nav-user {
+.nav-link {
     font-size: 18px;
     font-weight: bold;
-    color: #f5e6ca; /* Aged paper effect */
+    color: #f5e6ca;
     text-decoration: none;
     cursor: pointer;
     transition: color 0.3s ease-in-out, text-decoration 0.3s ease-in-out;

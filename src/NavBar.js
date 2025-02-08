@@ -2,6 +2,7 @@
 import { NavLink } from "react-router-dom";
 import { useUser } from "./UserContext";
 import "./NavBar.css";
+import logo from "./assets/logo.png";
 
 const NavBar = () => {
     const { user, dispatch } = useUser();
@@ -12,11 +13,13 @@ const NavBar = () => {
 
     return (
         <nav className="navbar">
-            <NavLink to="/" className="nav-link">Home</NavLink>
+            <NavLink to="/" className="nav-logo">
+                <img src={logo} alt="Fantasy Book Hub Logo" className="navbar-logo" />
+            </NavLink>
             <div className="nav-links">
                 {user ? (
                     <>
-                        <NavLink to="/profile" className="nav-link nav-user">{user.username}</NavLink>
+                        <NavLink to="/profile" className="nav-link">{user.username}</NavLink>
                         <NavLink to="/" onClick={handleLogout} className="nav-link">Logout</NavLink>
                     </>
                 ) : (
