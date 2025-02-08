@@ -1,6 +1,6 @@
 ﻿import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
+const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001/api";
 
 class FantasyBookHubApi {
     // General request function for all API calls
@@ -23,10 +23,13 @@ class FantasyBookHubApi {
     }
 
     // === Authentication ===
-    static async login(username, password) {
-        const res = await this.request("auth/login", { username, password }, "post");
-        localStorage.setItem("token", res.token);
-        return res.token;
+    static async login(email, password) {
+        return await this.request("auth/login", {email, password}, "post");
+    }
+
+    // Fetch user details by email
+    static async getUserByEmail(email) {
+        return await this.request(`users/email/${email}`);
     }
 
     static logout() {
