@@ -1,8 +1,8 @@
-﻿const db = require('../config/db');
+﻿const db = require("../config/db");
 
 class Group {
     /**
-     * Retrieves all discussion groups.
+     * Retrieves all discussion groups with member count.
      *
      * @returns {Promise<Object[]>} List of all discussion groups.
      * @example Response:
@@ -13,23 +13,29 @@ class Group {
      *     "description": "A group for fantasy book lovers.",
      *     "created_by": 2,
      *     "created_by_username": "booklover",
-     *     "created_at": "2024-02-06T12:00:00.000Z"
+     *     "created_at": "2024-02-06T12:00:00.000Z",
+     *     "member_count": 5
      *   }
      * ]
      */
     static async getAllGroups() {
         const result = await db.query(`
-            SELECT dg.id, dg.group_name, dg.description, dg.created_at, 
-                   u.id AS created_by, u.username AS created_by_username
+            SELECT dg.id,
+                   dg.group_name,
+                   dg.description,
+                   dg.created_at,
+                   u.id                                                              AS created_by,
+                   u.username                                                        AS created_by_username,
+                   (SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = dg.id) AS member_count
             FROM discussion_groups dg
-            JOIN users u ON dg.created_by = u.id
-            ORDER BY dg.created_at DESC
+                     JOIN users u ON dg.created_by = u.id
+            ORDER BY dg.id ASC
         `);
         return result.rows;
     }
 
     /**
-     * Retrieves a single discussion group by ID.
+     * Retrieves a single discussion group by ID, including member count.
      *
      * @param {number} groupId - The ID of the discussion group.
      * @returns {Promise<Object|null>} The discussion group or null if not found.
@@ -40,15 +46,21 @@ class Group {
      *   "description": "A group for fantasy book lovers.",
      *   "created_by": 2,
      *   "created_by_username": "booklover",
-     *   "created_at": "2024-02-06T12:00:00.000Z"
+     *   "created_at": "2024-02-06T12:00:00.000Z",
+     *   "member_count": 5
      * }
      */
     static async getGroupById(groupId) {
         const result = await db.query(`
-            SELECT dg.id, dg.group_name, dg.description, dg.created_at,
-                   u.id AS created_by, u.username AS created_by_username
+            SELECT dg.id,
+                   dg.group_name,
+                   dg.description,
+                   dg.created_at,
+                   u.id                                                              AS created_by,
+                   u.username                                                        AS created_by_username,
+                   (SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = dg.id) AS member_count
             FROM discussion_groups dg
-            JOIN users u ON dg.created_by = u.id
+                     JOIN users u ON dg.created_by = u.id
             WHERE dg.id = $1
         `, [groupId]);
 
@@ -232,6 +244,17 @@ class Group {
      * @param {string|null} groupTitle - The group title to search for.
      * @param {string|null} groupDescription - The group description to search for.
      * @returns {Promise<Object[]>} List of matching groups.
+     * @example Response:
+     * [
+     *   {
+     *     "id": 1,
+     *     "group_name": "Fantasy Readers",
+     *     "description": "A group for fantasy book lovers.",
+     *     "created_at": "2024-02-06T12:00:00.000Z",
+     *     "created_by": "booklover",
+     *     "member_count": 5
+     *   }
+     * ]
      */
     static async searchGroups(author, title, topic, groupTitle, groupDescription) {
         const conditions = [];
@@ -268,7 +291,8 @@ class Group {
         console.log("Executing Query with Params:", values); // Debugging log
 
         const result = await db.query(`
-            SELECT DISTINCT g.id, g.group_name, g.description, g.created_at, u.username AS created_by
+            SELECT DISTINCT g.id, g.group_name, g.description, g.created_at, u.username AS created_by,
+                            (SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = g.id) AS member_count
             FROM discussion_groups g
                      LEFT JOIN group_discussions d ON g.id = d.group_id
                      LEFT JOIN books b ON d.book_id = b.id
@@ -283,6 +307,7 @@ class Group {
 
         return result.rows;
     }
+
 }
 
 module.exports = Group;

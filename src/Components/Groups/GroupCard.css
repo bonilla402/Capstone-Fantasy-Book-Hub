@@ -1,0 +1,56 @@
+﻿.group-card {
+    background-color: #f5e1c5; /* Warm beige */
+    border: 2px solid #b5651d; /* Muted brown */
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 15px;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    width: 300px; /* ✅ Fixed width to 300px */
+    transition: transform 0.2s ease-in-out;
+    font-family: "Garamond", serif;
+}
+
+.group-card:hover {
+    transform: scale(1.02);
+}
+
+.group-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #7a3b1e; /* Deep brown */
+    margin-bottom: 10px;
+    font-family: "Georgia", serif;
+    word-wrap: break-word; /* ✅ Ensures long titles wrap */
+    white-space: normal;
+}
+
+.group-description {
+    color: #5c3b1e; /* Warm brown */
+    font-size: 1rem;
+    margin-bottom: 12px;
+    word-wrap: break-word; /* ✅ Ensures text wraps properly */
+    white-space: normal;
+}
+
+.group-members {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #7a3b1e;
+    margin-bottom: 12px;
+}
+
+.group-view-btn {
+    display: inline-block;
+    background-color: #d48236; /* Muted orange */
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.group-view-btn:hover {
+    background-color: #a45c1e; /* Deeper orange */
+}
