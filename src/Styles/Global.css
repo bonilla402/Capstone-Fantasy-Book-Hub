@@ -1,3 +1,20 @@
+/* App.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+/* index.css */
 body {
   font-family: 'Garamond', serif;
   background-color: #f5e6ca; /* Aged paper color */
@@ -29,3 +46,4 @@ button:hover {
   border-radius: 10px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
+

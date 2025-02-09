@@ -1,4 +1,5 @@
-﻿/* Navbar - Vintage Woodgrain Look */
+/* NavBar.css */
+/* Navbar - Vintage Woodgrain Look */
 .navbar {
     background: linear-gradient(to right, #c46728, #9b4d1e);
     padding-right: 15px;
@@ -52,3 +53,13 @@
     color: #ffd699; /* Lighter aged paper */
     text-decoration: underline;
 }
+
+/* Routes.css */
+
+.routes-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+

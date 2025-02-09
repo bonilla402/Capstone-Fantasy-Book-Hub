@@ -1,8 +1,8 @@
 import React from "react";
 import { UserProvider } from "./UserContext";
-import NavBar from "./NavBar";
-import Routes from "./Routes";
-import "./App.css";
+import NavBar from "./Components/Navbar/NavBar";
+import Routes from "./Routes/Routes";
+import "./Styles/Global.css";
 
 function App() {
     return (

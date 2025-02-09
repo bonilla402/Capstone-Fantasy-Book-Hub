@@ -1,13 +1,13 @@
 ﻿import React, { useState, useEffect } from "react";
-import { useUser } from "./UserContext";
-import FantasyBookHubApi from "./FantasyBookHubApi";
+import { useUser } from "../../UserContext";
+import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import { useNavigate } from "react-router-dom";
-import "./Form.css"; // Applies the shared form styling
+import "../../Styles/Form.css"; // Uses the shared form styling
 
-const Login = () => {
+const Register = () => {
     const { user, dispatch } = useUser();
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ email: "", password: "" });
+    const [formData, setFormData] = useState({ username: "", email: "", password: "" });
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -27,7 +27,8 @@ const Login = () => {
         setError(null);
 
         try {
-            const { token, user } = await FantasyBookHubApi.login(
+            const { token, user } = await FantasyBookHubApi.register(
+                formData.username,
                 formData.email,
                 formData.password
             );
@@ -41,9 +42,17 @@ const Login = () => {
     return (
         <div className="form-page">
             <div className="form-container">
-                <h2>Login</h2>
+                <h2>Register</h2>
                 {error && <p className="error-text">{error}</p>}
                 <form className="form" onSubmit={handleSubmit}>
+                    <label>Username:</label>
+                    <input
+                        type="text"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                    />
                     <label>Email:</label>
                     <input
                         type="email"
@@ -60,11 +69,11 @@ const Login = () => {
                         onChange={handleChange}
                         required
                     />
-                    <button type="submit">Login</button>
+                    <button type="submit">Register</button>
                 </form>
             </div>
         </div>
     );
 };
 
-export default Login;
+export default Register;

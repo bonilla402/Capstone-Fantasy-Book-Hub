@@ -1,8 +1,8 @@
 ﻿import React from "react";
 import { NavLink } from "react-router-dom";
-import { useUser } from "./UserContext";
-import "./NavBar.css";
-import logo from "./assets/logo.png";
+import { useUser } from "../../UserContext";
+import "../../Styles/Layout.css";
+import logo from '../../Assets/logo.png';
 
 const NavBar = () => {
     const { user, dispatch } = useUser();

@@ -1,11 +1,11 @@
 ﻿import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Home from "./Home";
-import Login from "./Login";
-import Register from "./Register";
-import EditProfile from "./EditProfile";
-import Profile from "./Profile";
-import "./Routes.css";
+import Home from "../Pages/Home/Home";
+import Login from "../Pages/Auth/Login";
+import Register from "../Pages/Auth/Register";
+import EditProfile from "../Components/Profile/EditProfile";
+import Profile from "../Components/Profile/Profile";
+import "../Styles/Layout.css";
 
 const AppRoutes = () => {
     return (

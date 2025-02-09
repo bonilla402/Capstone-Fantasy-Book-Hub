@@ -1,5 +1,5 @@
 ﻿import React from "react";
-import { useUser } from "./UserContext";
+import { useUser } from "../../UserContext";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css"; // Uses the vintage styling for profile
 

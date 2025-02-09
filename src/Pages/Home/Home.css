@@ -1,4 +1,5 @@
-﻿.home-container {
+/* Home.css */
+.home-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,3 +20,5 @@
     font-size: 1.5rem;
     color: #5c3c30;
 }
+
+
