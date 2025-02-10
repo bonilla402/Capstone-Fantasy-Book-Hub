@@ -281,10 +281,6 @@ class Group {
             values.push(`%${groupDescription}%`);
         }
 
-        if (conditions.length === 0) {
-            throw new BadRequestError("At least one search field must be provided.");
-        }
-
         // Apply AND logic by joining conditions with AND instead of OR
         const whereClause = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 

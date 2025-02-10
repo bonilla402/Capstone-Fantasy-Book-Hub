@@ -13,7 +13,7 @@ class FantasyBookHubApi {
         const params = method === "get" ? data : {};
 
         try {
-            const response = await axios({ url, method, data, params, headers });
+            const response = await axios({ url, method, data: method !== "get" ? data : undefined, params, headers });
             return response.data;
         } catch (err) {
             console.error("API Error:", err.response);
@@ -58,7 +58,7 @@ class FantasyBookHubApi {
     }
 
     static async searchGroups(searchParams = {}) {
-        return await this.request("groups/search", searchParams);
+        return await this.request("groups/search", searchParams, "get");
     }
 
     static async createGroup(data) {

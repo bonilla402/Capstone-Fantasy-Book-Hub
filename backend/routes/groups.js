@@ -30,14 +30,10 @@ router.get('/', ensureLoggedIn, async (req, res, next) => {
     }
 });
 
-router.get('/search', ensureLoggedIn, async (req, res, next) => {
+router.get("/search", ensureLoggedIn, async (req, res, next) => {
     try {
         const { author, title, topic, groupTitle, groupDescription } = req.query;
-
-        if (!author && !title && !topic && !groupTitle && !groupDescription) {
-            throw new BadRequestError("At least one search field (author, title, topic, groupTitle, or groupDescription) must be provided.");
-        }
-
+        
         const groups = await Group.searchGroups(author, title, topic, groupTitle, groupDescription);
         res.json(groups);
     } catch (err) {
