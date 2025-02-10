@@ -57,6 +57,10 @@ class FantasyBookHubApi {
         return await this.request(`groups/${id}`);
     }
 
+    static async searchGroups(searchParams = {}) {
+        return await this.request("groups/search", searchParams);
+    }
+
     static async createGroup(data) {
         return await this.request("groups", data, "post");
     }
