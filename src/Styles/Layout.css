@@ -3,12 +3,13 @@
 .navbar {
     background: linear-gradient(to right, #c46728, #9b4d1e);
     padding-right: 15px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     box-sizing: border-box;
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     z-index: 1000;
@@ -57,9 +58,6 @@
 /* Routes.css */
 
 .routes-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
 }
 
 
