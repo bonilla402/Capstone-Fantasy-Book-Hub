@@ -89,7 +89,7 @@ class FantasyBookHubApi {
     static async isUserMember(groupId) {
         return await this.request(`groups/${groupId}/is-member`);
     }
-
+    
     // === Discussion Routes ===
     static async getDiscussions(groupId) {
         return await this.request(`groups/${groupId}/discussions`);

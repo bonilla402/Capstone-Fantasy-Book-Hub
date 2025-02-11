@@ -186,21 +186,6 @@ router.delete('/:id/leave', ensureLoggedIn, async (req, res, next) => {
 router.get('/:id/members', ensureLoggedIn, async (req, res, next) => {
     try {
         const groupId = req.params.id;
-        const userId = res.locals.user.userId;
-        const isAdmin = res.locals.user.isAdmin;
-
-        // Allow if user is an admin
-        if (isAdmin) {
-            const members = await Group.getGroupMembers(groupId);
-            return res.json(members);
-        }
-
-        // Check if user is a member of the group
-        const isMember = await Group.isUserInGroup(groupId, userId);
-        if (!isMember) {
-            throw new UnauthorizedError("You must be a group member or an admin to view members.");
-        }
-
         const members = await Group.getGroupMembers(groupId);
         res.json(members);
     } catch (err) {
