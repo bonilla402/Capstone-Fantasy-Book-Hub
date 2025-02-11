@@ -7,7 +7,10 @@ import EditProfile from "../Components/Profile/EditProfile";
 import Profile from "../Components/Profile/Profile";
 import GroupList from "../Components/Groups/GroupList";
 import AddGroup from "../Components/Groups/AddGroup";
+import EditGroup from "../Components/Groups/EditGroup";
+
 import "../Styles/Layout.css";
+import Group from "../Components/Groups/Group";
 
 const AppRoutes = () => {
     return (
@@ -20,6 +23,8 @@ const AppRoutes = () => {
                 <Route path="/profile/edit" element={<EditProfile />} />
                 <Route path="/groups" element={<GroupList />} />
                 <Route path="/groups/create" element={<AddGroup />} />
+                <Route path="/groups/:id/edit" element={<EditGroup />} />
+                <Route path="/groups/:id" element={<Group />} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </div>

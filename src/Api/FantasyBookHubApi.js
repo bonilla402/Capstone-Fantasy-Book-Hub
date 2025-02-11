@@ -65,6 +65,15 @@ class FantasyBookHubApi {
         return await this.request("groups", data, "post");
     }
 
+    static async updateGroup(groupId, data) {
+        try {
+            return await this.request(`groups/${groupId}`, data, "PATCH");
+        } catch (error) {
+            console.error("Error updating group:", error);
+            throw error;
+        }
+    }
+    
     static async joinGroup(groupId) {
         return await this.request(`groups/${groupId}/join`, {}, "post");
     }

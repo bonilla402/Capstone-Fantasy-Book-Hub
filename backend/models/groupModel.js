@@ -306,7 +306,7 @@ class Group {
                      LEFT JOIN topics t ON bt.topic_id = t.id
                      JOIN users u ON g.created_by = u.id
                 ${whereClause}
-            ORDER BY g.created_at DESC
+            ORDER BY g.id ASC
         `, values);
 
         return result.rows;

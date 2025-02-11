@@ -1,0 +1,63 @@
+﻿/* Group Detail Page Styling */
+
+.group-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    border: 1px solid #9b4d1e; /* Burnt orange border */
+}
+
+.group-container h2 {
+    color: #9b4d1e; /* Burnt orange */
+    font-size: 2rem;
+}
+
+.group-container p {
+    font-size: 16px;
+    color: #4a2f27; /* Dark brown */
+}
+
+/* Button Container */
+.group-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Fix Button Size */
+.edit-button, .back-button {
+    width: auto;
+    min-width: 150px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+/* Edit Button */
+.edit-button {
+    background-color: #c46728; /* Burnt orange */
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #9b4d1e; /* Darker orange */
+}
+
+/* Back Button */
+.back-button {
+    background-color: #4a2f27; /* Dark brown */
+    color: white;
+}
+
+.back-button:hover {
+    background-color: #2e1b14; /* Even darker brown */
+}
