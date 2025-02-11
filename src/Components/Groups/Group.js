@@ -1,12 +1,14 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
+import { useUser } from "../../UserContext";
 import "../../Styles/Form.css"; // Reuse existing styles
 import "./Group.css"; // Custom styles
 
 const Group = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useUser();
 
     const [group, setGroup] = useState(null);
     const [error, setError] = useState("");
@@ -36,11 +38,16 @@ const Group = () => {
         <div className="group-container">
             <h2>{group.group_name}</h2>
             <p>{group.description}</p>
+            <p><strong>Created by:</strong> {group.created_by_username}</p>
+            <p><strong>Members:</strong> {group.member_count}</p>
 
             <div className="group-buttons">
-                <button className="edit-button" onClick={() => navigate(`/groups/${id}/edit`)}>
-                    Edit Group
-                </button>
+                {/* Show Edit button only if the logged-in user is the creator */}
+                {user && user.id === group.created_by && (
+                    <button className="edit-button" onClick={() => navigate(`/groups/${id}/edit`)}>
+                        Edit Group
+                    </button>
+                )}
                 <button className="back-button" onClick={() => navigate("/groups")}>
                     Back to All Groups
                 </button>
