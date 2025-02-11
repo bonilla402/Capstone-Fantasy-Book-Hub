@@ -14,7 +14,8 @@ class Group {
      *     "created_by": 2,
      *     "created_by_username": "booklover",
      *     "created_at": "2024-02-06T12:00:00.000Z",
-     *     "member_count": 5
+     *     "member_count": 5,
+     *    "discussion_count": 5
      *   }
      * ]
      */
@@ -24,15 +25,17 @@ class Group {
                    dg.group_name,
                    dg.description,
                    dg.created_at,
-                   u.id                                                              AS created_by,
-                   u.username                                                        AS created_by_username,
-                   (SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = dg.id) AS member_count
+                   u.id AS created_by,
+                   u.username AS created_by_username,
+                   (SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = dg.id) AS member_count,
+                   (SELECT COUNT(*) FROM group_discussions gd WHERE gd.group_id = dg.id) AS discussion_count
             FROM discussion_groups dg
                      JOIN users u ON dg.created_by = u.id
             ORDER BY dg.id ASC
         `);
         return result.rows;
     }
+
 
     /**
      * Retrieves a single discussion group by ID, including member count.
@@ -47,7 +50,8 @@ class Group {
      *   "created_by": 2,
      *   "created_by_username": "booklover",
      *   "created_at": "2024-02-06T12:00:00.000Z",
-     *   "member_count": 5
+     *   "member_count": 5,
+     *   "discussion_count": 5
      * }
      */
     static async getGroupById(groupId) {
@@ -56,9 +60,10 @@ class Group {
                    dg.group_name,
                    dg.description,
                    dg.created_at,
-                   u.id                                                              AS created_by,
-                   u.username                                                        AS created_by_username,
-                   (SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = dg.id) AS member_count
+                   u.id AS created_by,
+                   u.username AS created_by_username,
+                   (SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = dg.id) AS member_count,
+                   (SELECT COUNT(*) FROM group_discussions gd WHERE gd.group_id = dg.id) AS discussion_count
             FROM discussion_groups dg
                      JOIN users u ON dg.created_by = u.id
             WHERE dg.id = $1
@@ -66,6 +71,7 @@ class Group {
 
         return result.rows[0] || null;
     }
+
 
     /**
      * Creates a new discussion group.
@@ -311,7 +317,6 @@ class Group {
 
         return result.rows;
     }
-
 }
 
 module.exports = Group;

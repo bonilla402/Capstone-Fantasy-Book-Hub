@@ -79,6 +79,7 @@ const Group = () => {
                 <p>{group.description}</p>
                 <p><strong>Created by:</strong> {group.created_by_username}</p>
                 <p><strong>Members:</strong> {group.member_count}</p>
+                <p><strong>Discussions:</strong> {group.discussion_count}</p>
 
                 {successMessage && <p className="success-text">{successMessage}</p>}
 
