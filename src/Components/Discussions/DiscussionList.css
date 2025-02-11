@@ -1,0 +1,16 @@
+﻿.discussion-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.discussion-list-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #5c3b1e; /* Warm brown */
+}
+
+.discussion-list-message.error {
+    color: #a45c1e; /* Muted red-orange */
+}

@@ -1,24 +1,35 @@
-﻿/* Group Detail Page Styling */
+﻿
+.group-content-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
 
+/* Styling for the group details */
 .group-container {
-    max-width: 600px;
-    margin: 50px auto;
+    max-width: 500px;
     padding: 20px;
     background: white;
     border-radius: 10px;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
-    border: 1px solid #9b4d1e; /* Burnt orange border */
+    border: 1px solid #9b4d1e;
+    margin: 0;
 }
 
+/* Group Title */
 .group-container h2 {
-    color: #9b4d1e; /* Burnt orange */
+    color: #9b4d1e;
     font-size: 2rem;
 }
 
+/* Group Description */
 .group-container p {
     font-size: 16px;
-    color: #4a2f27; /* Dark brown */
+    color: #4a2f27;
 }
 
 /* Button Container */
@@ -44,32 +55,32 @@
 
 /* Edit Button */
 .edit-button {
-    background-color: #c46728; /* Burnt orange */
+    background-color: #c46728;
     color: white;
 }
 
 .edit-button:hover {
-    background-color: #9b4d1e; /* Darker orange */
+    background-color: #9b4d1e;
 }
 
 /* Back Button */
 .back-button {
-    background-color: #4a2f27; /* Dark brown */
+    background-color: #4a2f27;
     color: white;
 }
 
 .back-button:hover {
-    background-color: #2e1b14; /* Even darker brown */
+    background-color: #2e1b14;
 }
 
 /* Join/Leave Button Styling */
 .join-leave-button {
-    background-color: #0056b3; /* Dark Blue */
+    background-color: #0056b3;
     color: white;
     font-size: 16px;
     font-weight: bold;
     padding: 10px 20px;
-    width: 160px; /* Fixed button width */
+    width: 160px;
     text-align: center;
     border: none;
     border-radius: 5px;
@@ -78,52 +89,47 @@
 }
 
 .join-leave-button:hover {
-    background-color: #003d82; /* Darker Blue */
+    background-color: #003d82;
 }
 
 /* Success Message Styling */
 .success-text {
-    color: #2f561b; /* Deep muted green */
+    color: #2f561b;
     font-size: 16px;
     margin-top: 10px;
-    background-color: #dff0d8; /* Soft faded green */
+    background-color: #dff0d8;
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid #6c8c52; /* Muted olive green border */
+    border: 1px solid #6c8c52;
     text-align: center;
     font-family: 'Garamond', serif;
     font-weight: bold;
     box-shadow: 2px 2px 5px rgba(108, 140, 82, 0.3);
 }
 
-/* Layout: Group details and members list side-by-side, fully aligned at the top */
+/* Group Detail Page Styling */
+
 .group-page-container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Force alignment at the very top */
-    gap: 40px;
+    flex-direction: column; /* 🔥 Ensures discussions appear below */
+    align-items: center;
+    gap: 20px;
     max-width: 1000px;
-    margin: 0 auto !important; /* Ensure no top margin */
-    padding: 0 !important; /* Remove padding */
+    margin: 0 auto;
+    padding-bottom: 40px; /* Adds space below */
 }
 
-/* Styling for the group details */
-.group-container {
-    max-width: 500px;
-    padding: 20px 20px 20px 20px; /* Keep only side padding */
-    background: white;
-    border-radius: 10px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    border: 1px solid #9b4d1e;
-    margin: 0 !important; /* Ensure no margin */
-}
-
-/* Ensure the members list is perfectly aligned at the top */
 .group-members-section {
     max-width: 300px;
     flex-shrink: 0;
-    align-self: flex-start; /* Forces strict top alignment */
-    margin: 0 !important; /* Force remove top margin */
-    padding: 0 !important; /* Force remove top padding */
+    align-self: flex-start;
+    margin: 0;
+}
+
+.group-discussions-section {
+    width: 100%;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #9b4d1e;
+    text-align: center;
 }

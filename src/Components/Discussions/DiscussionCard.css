@@ -1,0 +1,47 @@
+﻿.discussion-card {
+    background-color: #f5e1c5;
+    border: 2px solid #b5651d;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 15px;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    transition: transform 0.2s ease-in-out;
+    font-family: "Garamond", serif;
+}
+
+.discussion-card:hover {
+    transform: scale(1.02);
+}
+
+.discussion-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #7a3b1e;
+    margin-bottom: 10px;
+    font-family: "Georgia", serif;
+}
+
+.discussion-book,
+.discussion-author,
+.discussion-creator {
+    font-size: 1rem;
+    color: #5c3b1e;
+    margin-bottom: 8px;
+}
+
+.discussion-view-btn {
+    display: inline-block;
+    background-color: #d48236;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.discussion-view-btn:hover {
+    background-color: #a45c1e;
+}
