@@ -44,10 +44,18 @@ const Group = () => {
                 await FantasyBookHubApi.leaveGroup(id);
                 setIsMember(false);
                 setSuccessMessage("You have left the group.");
+                setGroup(prevGroup => ({
+                    ...prevGroup,
+                    member_count: prevGroup.member_count - 1 // Decrease count
+                }));
             } else {
                 await FantasyBookHubApi.joinGroup(id);
                 setIsMember(true);
                 setSuccessMessage("You have joined the group.");
+                setGroup(prevGroup => ({
+                    ...prevGroup,
+                    member_count: prevGroup.member_count + 1 // Increase count
+                }));
             }
 
             // Hide the success message after 3 seconds
