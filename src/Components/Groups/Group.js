@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
-import { useUser } from "../../UserContext";
+import { useUser } from "../../UserContext"; // Import UserContext
 import "../../Styles/Form.css"; // Reuse existing styles
 import "./Group.css"; // Custom styles
 
@@ -9,27 +9,47 @@ const Group = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useUser();
-
+    
     const [group, setGroup] = useState(null);
+    const [isMember, setIsMember] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        (async () => {
+        const fetchGroupDetails = async () => {
             try {
                 const fetchedGroup = await FantasyBookHubApi.getGroup(id);
-                if (fetchedGroup) {
-                    setGroup(fetchedGroup);
-                } else {
+                if (!fetchedGroup) {
                     setError("Group not found.");
+                    return;
                 }
+                setGroup(fetchedGroup);
+                
+                const membershipStatus = await FantasyBookHubApi.isUserMember(id);
+                setIsMember(membershipStatus.isMember);
             } catch (err) {
                 setError("Error fetching group details.");
             } finally {
                 setLoading(false);
             }
-        })();
-    }, [id]);
+        };
+
+        fetchGroupDetails();
+    }, [id, user]);
+
+    const handleJoinLeave = async () => {
+        try {
+            if (isMember) {
+                await FantasyBookHubApi.leaveGroup(id);
+                setIsMember(false);
+            } else {
+                await FantasyBookHubApi.joinGroup(id);
+                setIsMember(true);
+            }
+        } catch (err) {
+            setError("Error updating group membership.");
+        }
+    };
 
     if (loading) return <p>Loading group details...</p>;
     if (error) return <p className="error-text">{error}</p>;
@@ -42,12 +62,15 @@ const Group = () => {
             <p><strong>Members:</strong> {group.member_count}</p>
 
             <div className="group-buttons">
-                {/* Show Edit button only if the logged-in user is the creator */}
                 {user && user.id === group.created_by && (
                     <button className="edit-button" onClick={() => navigate(`/groups/${id}/edit`)}>
                         Edit Group
                     </button>
                 )}
+                <button className="join-leave-button" onClick={handleJoinLeave}>
+                    {isMember ? "Leave Group" : "Join Group"}
+                </button>
+
                 <button className="back-button" onClick={() => navigate("/groups")}>
                     Back to All Groups
                 </button>

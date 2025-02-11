@@ -74,8 +74,20 @@ class FantasyBookHubApi {
         }
     }
     
+    static async getGroupMembers(groupId) {
+        return await this.request(`groups/${groupId}/members`);
+    }
+
     static async joinGroup(groupId) {
-        return await this.request(`groups/${groupId}/join`, {}, "post");
+        return await this.request(`groups/${groupId}/join`, {}, "POST");
+    }
+
+    static async leaveGroup(groupId) {
+        return await this.request(`groups/${groupId}/leave`, {}, "DELETE");
+    }
+
+    static async isUserMember(groupId) {
+        return await this.request(`groups/${groupId}/is-member`);
     }
 
     // === Discussion Routes ===

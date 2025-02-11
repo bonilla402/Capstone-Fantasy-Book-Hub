@@ -208,4 +208,30 @@ router.get('/:id/members', ensureLoggedIn, async (req, res, next) => {
     }
 });
 
+/**
+ * GET /groups/:id/is-member
+ * Checks if the logged-in user is a member of the group.
+ *
+ * Authorization required: Logged-in user.
+ * @returns {Object} { isMember: true/false }
+ */
+router.get('/:id/is-member', ensureLoggedIn, async (req, res, next) => {
+    try {
+        const groupId = req.params.id;
+        const userId = res.locals.user.userId;
+        const isAdmin = res.locals.user.isAdmin;
+
+        // Admins are always considered members
+        if (isAdmin) {
+            return res.json({ isMember: true });
+        }
+
+        const isMember = await Group.isUserInGroup(groupId, userId);
+        res.json({ isMember });
+    } catch (err) {
+        return next(err);
+    }
+});
+
+
 module.exports = router;
