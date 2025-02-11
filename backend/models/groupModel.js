@@ -90,7 +90,15 @@ class Group {
             RETURNING id, group_name, description, created_by, created_at
         `, [groupName, description, createdBy]);
 
-        return result.rows[0];
+        const newGroup = result.rows[0];
+
+        await db.query(`
+        INSERT INTO group_members (group_id, user_id)
+        VALUES ($1, $2)
+    `, [newGroup.id, createdBy]);
+
+        return newGroup;
+
     }
 
     /**

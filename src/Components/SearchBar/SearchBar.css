@@ -1,26 +1,55 @@
 ﻿.search-form {
     display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+    align-items: center;
+    justify-content: space-between; /* Spread elements across full width */
+    background-color: #f4e1c1; /* Warm aged paper background */
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #b08968; 
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    margin: 20px auto;
+    font-family: "Georgia", serif;
+    gap: 10px;
+}
+
+.search-fields {
+    display: flex;
+    flex-grow: 1;
+    gap: 10px;
 }
 
 .search-input {
-    width: 60%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    flex: 1; /* Make inputs share available space */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #b08968;
+    border-radius: 4px;
+    background-color: #faf3e0; /* Aged paper background */
+    color: #3e2723; /* Dark brown text */
+    font-family: "Georgia", serif;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.search-input:focus {
+    border-color: #8a5a44;
+    background-color: #f9e5c0;
 }
 
 .search-button {
-    padding: 8px 15px;
-    margin-left: 10px;
-    background-color: #007bff;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #8a5a44; /* Rich brown leather feel */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background 0.3s ease;
+    font-family: "Georgia", serif;
+    text-transform: uppercase;
 }
 
 .search-button:hover {
-    background-color: #0056b3;
+    background-color: #6d4c3d;
 }
