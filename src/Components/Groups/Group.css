@@ -1,4 +1,15 @@
-﻿
+﻿/* Group Detail Page Styling */
+
+.group-page-container {
+    display: flex;
+    flex-direction: column; /* Ensures discussions appear below */
+    align-items: center;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* New container to wrap group details and members */
 .group-content-container {
     display: flex;
     justify-content: center;
@@ -10,15 +21,17 @@
 
 /* Styling for the group details */
 .group-container {
-    max-width: 500px;
+    min-width: 500px;
+    max-width: 90%;
+    width: auto;
     padding: 20px;
     background: white;
     border-radius: 10px;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
     border: 1px solid #9b4d1e;
-    margin: 0;
 }
+
 
 /* Group Title */
 .group-container h2 {
@@ -40,8 +53,7 @@
     margin-top: 20px;
 }
 
-/* Fix Button Size */
-.edit-button, .back-button {
+.group-buttons button {
     width: auto;
     min-width: 150px;
     padding: 10px 20px;
@@ -55,7 +67,7 @@
 
 /* Edit Button */
 .edit-button {
-    background-color: #c46728;
+    background-color: #c46728; /* Burnt orange */
     color: white;
 }
 
@@ -63,33 +75,34 @@
     background-color: #9b4d1e;
 }
 
+/* Join/Leave Button */
+.join-leave-button {
+    background-color: #0056b3; /* Dark Blue */
+    color: white;
+}
+
+.join-leave-button:hover {
+    background-color: #003d82;
+}
+
+/* Start New Discussion Button */
+.discussion-button {
+    background-color: #c46728; /* Burnt orange */
+    color: white;
+}
+
+.discussion-button:hover {
+    background-color: #9b4d1e;
+}
+
 /* Back Button */
 .back-button {
-    background-color: #4a2f27;
+    background-color: #4a2f27; /* Dark brown */
     color: white;
 }
 
 .back-button:hover {
     background-color: #2e1b14;
-}
-
-/* Join/Leave Button Styling */
-.join-leave-button {
-    background-color: #0056b3;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
-    width: 160px;
-    text-align: center;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
-}
-
-.join-leave-button:hover {
-    background-color: #003d82;
 }
 
 /* Success Message Styling */
@@ -107,18 +120,7 @@
     box-shadow: 2px 2px 5px rgba(108, 140, 82, 0.3);
 }
 
-/* Group Detail Page Styling */
-
-.group-page-container {
-    display: flex;
-    flex-direction: column; /* 🔥 Ensures discussions appear below */
-    align-items: center;
-    gap: 20px;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding-bottom: 40px; /* Adds space below */
-}
-
+/* Ensure the members list aligns properly */
 .group-members-section {
     max-width: 300px;
     flex-shrink: 0;
@@ -126,10 +128,10 @@
     margin: 0;
 }
 
+/* Ensure discussions appear below group details and members */
 .group-discussions-section {
     width: 100%;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 2px solid #9b4d1e;
-    text-align: center;
+    border-top: 2px solid #9b4d1e; /* Visual separation */
 }
