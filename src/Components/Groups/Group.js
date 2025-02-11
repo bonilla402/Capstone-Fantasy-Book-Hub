@@ -9,9 +9,10 @@ const Group = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useUser();
-    
+
     const [group, setGroup] = useState(null);
     const [isMember, setIsMember] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
 
@@ -24,7 +25,7 @@ const Group = () => {
                     return;
                 }
                 setGroup(fetchedGroup);
-                
+
                 const membershipStatus = await FantasyBookHubApi.isUserMember(id);
                 setIsMember(membershipStatus.isMember);
             } catch (err) {
@@ -42,10 +43,15 @@ const Group = () => {
             if (isMember) {
                 await FantasyBookHubApi.leaveGroup(id);
                 setIsMember(false);
+                setSuccessMessage("You have left the group.");
             } else {
                 await FantasyBookHubApi.joinGroup(id);
                 setIsMember(true);
+                setSuccessMessage("You have joined the group.");
             }
+
+            // Hide the success message after 3 seconds
+            setTimeout(() => setSuccessMessage(""), 3000);
         } catch (err) {
             setError("Error updating group membership.");
         }
@@ -60,6 +66,8 @@ const Group = () => {
             <p>{group.description}</p>
             <p><strong>Created by:</strong> {group.created_by_username}</p>
             <p><strong>Members:</strong> {group.member_count}</p>
+
+            {successMessage && <p className="success-text">{successMessage}</p>}
 
             <div className="group-buttons">
                 {user && user.id === group.created_by && (
