@@ -1,0 +1,56 @@
+﻿/* NewDiscussion.css - Additional styling for the NewDiscussion component */
+
+/* Ensure alignment with existing form styles */
+.NewDiscussion {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Book info section */
+.book-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.book-info h3 {
+    font-size: 1.5rem;
+    color: #9b4d1e; /* Burnt orange to match the theme */
+}
+
+.book-info img {
+    width: 100%;
+    max-width: 150px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.book-info p {
+    font-size: 1rem;
+    color: #4a2f27; /* Dark brown */
+    margin: 5px 0;
+}
+
+/* Adjustments for form fields inside NewDiscussion */
+.NewDiscussion .form label {
+    font-weight: bold;
+    color: #4a2f27; /* Matches existing styles */
+}
+
+.NewDiscussion .form textarea {
+    min-height: 100px;
+}
+
+/* Center the submit button */
+.NewDiscussion button {
+    width: 100%;
+    background-color: #c46728; /* Burnt orange */
+    font-weight: bold;
+}
+
+.NewDiscussion button:hover {
+    background-color: #9b4d1e;
+}

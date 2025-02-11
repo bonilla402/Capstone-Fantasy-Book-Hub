@@ -91,12 +91,13 @@ class FantasyBookHubApi {
     }
     
     // === Discussion Routes ===
+
     static async getDiscussions(groupId) {
-        return await this.request(`groups/${groupId}/discussions`);
+        return await this.request(`discussions/${groupId}`);
     }
 
     static async createDiscussion(groupId, data) {
-        return await this.request(`groups/${groupId}/discussions`, data, "post");
+        return await this.request(`discussions/${groupId}`, data, "post");
     }
 
     static async getDiscussion(discussionId) {
@@ -111,6 +112,12 @@ class FantasyBookHubApi {
     static async addMessage(discussionId, data) {
         return await this.request(`discussions/${discussionId}/messages`, data, "post");
     }
+
+    // === Book Routes ===
+    static async getBook(bookId) {
+        return await this.request(`books/${bookId}`);
+    }
+
 }
 
 export default FantasyBookHubApi;

@@ -11,6 +11,7 @@ import EditGroup from "../Components/Groups/EditGroup";
 
 import "../Styles/Layout.css";
 import Group from "../Components/Groups/Group";
+import NewDiscussion from "../Components/Discussions/NewDiscussion";
 
 const AppRoutes = () => {
     return (
@@ -25,6 +26,7 @@ const AppRoutes = () => {
                 <Route path="/groups/create" element={<AddGroup />} />
                 <Route path="/groups/:id/edit" element={<EditGroup />} />
                 <Route path="/groups/:id" element={<Group />} />
+                <Route path="/groups/:groupId/discussions/new" element={<NewDiscussion />} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </div>
