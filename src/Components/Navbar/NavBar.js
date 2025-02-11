@@ -19,7 +19,13 @@ const NavBar = () => {
             <div className="nav-links">
                 {user ? (
                     <>
-                        <NavLink to="/groups" className="nav-link">Groups</NavLink>
+                        <div className="nav-dropdown">
+                            <NavLink to="/groups" className="nav-link">Groups</NavLink>
+                            <div className="dropdown-menu">
+                                <NavLink to="/groups" className="dropdown-item">Groups</NavLink>
+                                <NavLink to="/groups/create" className="dropdown-item">Create Group</NavLink>
+                            </div>
+                        </div>
                         <NavLink to="/profile" className="nav-link">{user.username}</NavLink>
                         <NavLink to="/" onClick={handleLogout} className="nav-link">Logout</NavLink>
                     </>

@@ -6,6 +6,7 @@ import Register from "../Pages/Auth/Register";
 import EditProfile from "../Components/Profile/EditProfile";
 import Profile from "../Components/Profile/Profile";
 import GroupList from "../Components/Groups/GroupList";
+import AddGroup from "../Components/Groups/AddGroup";
 import "../Styles/Layout.css";
 
 const AppRoutes = () => {
@@ -18,6 +19,7 @@ const AppRoutes = () => {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/profile/edit" element={<EditProfile />} />
                 <Route path="/groups" element={<GroupList />} />
+                <Route path="/groups/create" element={<AddGroup />} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </div>

@@ -16,6 +16,47 @@
     font-family: 'Garamond', serif;
 }
 
+/* Dropdown Container */
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #9b4d1e;
+    border-radius: 5px;
+    min-width: 160px;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+/* Show dropdown on hover */
+.nav-dropdown:hover .dropdown-menu {
+    display: flex;
+}
+
+/* Dropdown Items */
+.dropdown-item {
+    color: #f5e6ca;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+}
+
+.dropdown-item:hover {
+    background: #c46728;
+    color: #ffd699;
+}
+
 /* Logo Styling */
 .nav-logo {
     display: flex;
