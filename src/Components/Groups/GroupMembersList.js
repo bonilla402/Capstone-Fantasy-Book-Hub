@@ -2,7 +2,7 @@
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "./GroupMembersList.css"; // Styling for scrollable list
 
-const GroupMembersList = ({ groupId }) => {
+const GroupMembersList = ({ groupId, refreshTrigger }) => {
     const [members, setMembers] = useState([]);
     const [error, setError] = useState("");
 
@@ -17,7 +17,7 @@ const GroupMembersList = ({ groupId }) => {
         };
 
         fetchMembers();
-    }, [groupId]);
+    }, [groupId, refreshTrigger]); 
 
     if (error) return <p className="error-text">{error}</p>;
 

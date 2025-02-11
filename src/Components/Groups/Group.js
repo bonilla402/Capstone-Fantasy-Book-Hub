@@ -16,6 +16,7 @@ const Group = () => {
     const [successMessage, setSuccessMessage] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
 
     useEffect(() => {
         const fetchGroupDetails = async () => {
@@ -26,7 +27,7 @@ const Group = () => {
                     return;
                 }
                 setGroup(fetchedGroup);
-
+                
                 const membershipStatus = await FantasyBookHubApi.isUserMember(id);
                 setIsMember(membershipStatus.isMember);
             } catch (err) {
@@ -58,8 +59,10 @@ const Group = () => {
                     member_count: prevGroup.member_count + 1 // Increase count
                 }));
             }
+            
+            setRefreshTrigger(prev => !prev);
 
-            // Hide the success message after 3 seconds
+            // Hide success message after 3 seconds
             setTimeout(() => setSuccessMessage(""), 3000);
         } catch (err) {
             setError("Error updating group membership.");
@@ -96,7 +99,7 @@ const Group = () => {
                 </div>
             </div>
             <div className="group-members-section">
-                <GroupMembersList groupId={id} />
+                <GroupMembersList groupId={id} refreshTrigger={refreshTrigger} />
             </div>
         </div>
     );
