@@ -95,3 +95,35 @@
     font-weight: bold;
     box-shadow: 2px 2px 5px rgba(108, 140, 82, 0.3);
 }
+
+/* Layout: Group details and members list side-by-side, fully aligned at the top */
+.group-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Force alignment at the very top */
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto !important; /* Ensure no top margin */
+    padding: 0 !important; /* Remove padding */
+}
+
+/* Styling for the group details */
+.group-container {
+    max-width: 500px;
+    padding: 20px 20px 20px 20px; /* Keep only side padding */
+    background: white;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    border: 1px solid #9b4d1e;
+    margin: 0 !important; /* Ensure no margin */
+}
+
+/* Ensure the members list is perfectly aligned at the top */
+.group-members-section {
+    max-width: 300px;
+    flex-shrink: 0;
+    align-self: flex-start; /* Forces strict top alignment */
+    margin: 0 !important; /* Force remove top margin */
+    padding: 0 !important; /* Force remove top padding */
+}

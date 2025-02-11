@@ -2,6 +2,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import { useUser } from "../../UserContext"; // Import UserContext
+import GroupMembersList from "./GroupMembersList"; // Import new members list component
 import "../../Styles/Form.css"; // Reuse existing styles
 import "./Group.css"; // Custom styles
 
@@ -69,27 +70,33 @@ const Group = () => {
     if (error) return <p className="error-text">{error}</p>;
 
     return (
-        <div className="group-container">
-            <h2>{group.group_name}</h2>
-            <p>{group.description}</p>
-            <p><strong>Created by:</strong> {group.created_by_username}</p>
-            <p><strong>Members:</strong> {group.member_count}</p>
+        <div className="group-page-container">
+            <div className="group-container">
+                <h2>{group.group_name}</h2>
+                <p>{group.description}</p>
+                <p><strong>Created by:</strong> {group.created_by_username}</p>
+                <p><strong>Members:</strong> {group.member_count}</p>
 
-            {successMessage && <p className="success-text">{successMessage}</p>}
+                {successMessage && <p className="success-text">{successMessage}</p>}
 
-            <div className="group-buttons">
-                {user && user.id === group.created_by && (
-                    <button className="edit-button" onClick={() => navigate(`/groups/${id}/edit`)}>
-                        Edit Group
+                <div className="group-buttons">
+                    {user && user.id === group.created_by && (
+                        <button className="edit-button" onClick={() => navigate(`/groups/${id}/edit`)}>
+                            Edit Group
+                        </button>
+                    )}
+
+                    <button className="join-leave-button" onClick={handleJoinLeave}>
+                        {isMember ? "Leave Group" : "Join Group"}
                     </button>
-                )}
-                <button className="join-leave-button" onClick={handleJoinLeave}>
-                    {isMember ? "Leave Group" : "Join Group"}
-                </button>
 
-                <button className="back-button" onClick={() => navigate("/groups")}>
-                    Back to All Groups
-                </button>
+                    <button className="back-button" onClick={() => navigate("/groups")}>
+                        Back to All Groups
+                    </button>
+                </div>
+            </div>
+            <div className="group-members-section">
+                <GroupMembersList groupId={id} />
             </div>
         </div>
     );
