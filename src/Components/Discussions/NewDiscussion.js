@@ -1,9 +1,13 @@
 ﻿import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "../../Styles/Form.css";
 import "./NewDiscussion.css";
 
-const NewDiscussion = ({ groupId, bookId: propBookId, onDiscussionAdded }) => {
+const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId, onDiscussionAdded }) => {
+    const { groupId: routeGroupId } = useParams();
+    const groupId = propGroupId || routeGroupId; // Use prop if available, otherwise get from URL
+
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [bookId, setBookId] = useState(propBookId || null);
@@ -29,7 +33,6 @@ const NewDiscussion = ({ groupId, bookId: propBookId, onDiscussionAdded }) => {
     const handleSearchChange = (e) => {
         const text = e.target.value.toLowerCase();
         setSearchText(text);
-
         if (text.length >= 3) {
             const filtered = books.filter((book) =>
                 book.title.toLowerCase().includes(text) ||
@@ -50,8 +53,8 @@ const NewDiscussion = ({ groupId, bookId: propBookId, onDiscussionAdded }) => {
         setError(null);
         setSuccess(false);
 
-        if (!title || !content || !bookId) {
-            setError("Title, content, and book selection are required.");
+        if (!title || !content || !bookId || !groupId) {
+            setError("Title, content, book selection, and group ID are required.");
             return;
         }
 
