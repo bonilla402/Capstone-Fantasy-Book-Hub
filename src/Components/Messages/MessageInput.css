@@ -1,0 +1,33 @@
+﻿.message-input-container {
+    margin-top: 20px;
+}
+
+/* Title Above Message Input */
+.message-input-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #9b4d1e;
+    margin-bottom: 10px;
+}
+
+.message-input-container textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+}
+
+.message-input-container button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #c46728;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.message-input-container button:hover {
+    background-color: #9b4d1e;
+}

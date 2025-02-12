@@ -104,14 +104,15 @@ class FantasyBookHubApi {
         return await this.request(`discussions/detail/${discussionId}`);
     }
 
-    // === Messages ===
+// === Messages ===
     static async getMessages(discussionId) {
-        return await this.request(`discussions/${discussionId}/messages`);
+        return await this.request(`messages/${discussionId}`);
     }
 
-    static async addMessage(discussionId, data) {
-        return await this.request(`discussions/${discussionId}/messages`, data, "post");
+    static async addMessage(discussionId, content) {
+        return await this.request(`messages/${discussionId}`, { content }, "post");
     }
+
 
     // === Book Routes ===
     static async getBook(bookId) {
