@@ -1,40 +1,57 @@
 ﻿import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "../../Styles/Form.css";
 import "./NewDiscussion.css";
 
-const NewDiscussion = ({ onDiscussionAdded }) => {
-    const { groupId, bookId } = useParams(); // ✅ Extract params from the route
+const NewDiscussion = ({ groupId, bookId: propBookId, onDiscussionAdded }) => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [book, setBook] = useState(null);
+    const [bookId, setBookId] = useState(propBookId || null);
+    const [books, setBooks] = useState([]);
+    const [filteredBooks, setFilteredBooks] = useState([]);
+    const [searchText, setSearchText] = useState("");
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
     useEffect(() => {
-        async function fetchBook() {
+        async function fetchBooks() {
             try {
-                const bookData = await FantasyBookHubApi.getBook(bookId);
-                if (bookData) {
-                    setBook(bookData);
-                } else {
-                    console.error("Book not found");
-                }
+                const allBooks = await FantasyBookHubApi.getAllBooks();
+                setBooks(allBooks);
+                setFilteredBooks(allBooks);
             } catch (err) {
-                console.error("Error fetching book:", err);
+                console.error("Error fetching books:", err);
             }
         }
-        if (bookId) fetchBook();
-    }, [bookId]);
+        fetchBooks();
+    }, []);
+
+    const handleSearchChange = (e) => {
+        const text = e.target.value.toLowerCase();
+        setSearchText(text);
+
+        if (text.length >= 3) {
+            const filtered = books.filter((book) =>
+                book.title.toLowerCase().includes(text) ||
+                book.authors.some(author => author.toLowerCase().includes(text))
+            );
+            setFilteredBooks(filtered);
+        } else {
+            setFilteredBooks(books);
+        }
+    };
+
+    const handleBookSelect = (selectedBookId) => {
+        setBookId(selectedBookId);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
         setSuccess(false);
 
-        if (!title || !content) {
-            setError("Title and content are required.");
+        if (!title || !content || !bookId) {
+            setError("Title, content, and book selection are required.");
             return;
         }
 
@@ -44,7 +61,6 @@ const NewDiscussion = ({ onDiscussionAdded }) => {
             setSuccess(true);
             setTitle("");
             setContent("");
-            if (onDiscussionAdded) onDiscussionAdded();
         } catch (err) {
             setError(err[0] || "Failed to create discussion.");
         }
@@ -56,20 +72,32 @@ const NewDiscussion = ({ onDiscussionAdded }) => {
             {error && <p className="error-text">{error}</p>}
             {success && <p className="success-text">Discussion created successfully!</p>}
 
-            {/* ✅ Ensure book details are displayed */}
-            {book ? (
-                <div className="book-info">
-                    <h3>{book.title}</h3>
-                    <img src={book.cover_image} alt={book.title} />
-                    <p>By: {book.authors?.join(", ")}</p>
-                    <p>Topics: {book.topics?.join(", ")}</p>
-                </div>
-            ) : (
-                <p>Loading book details...</p>
-            )}
+            {/* Search toolbar remains visible */}
+            <div className="book-search">
+                <label>Search for a book:</label>
+                <input
+                    type="text"
+                    value={searchText}
+                    onChange={handleSearchChange}
+                    placeholder="Type at least 3 characters..."
+                />
+                {filteredBooks.length > 0 && (
+                    <ul className="book-dropdown">
+                        {filteredBooks.map((book) => (
+                            <li
+                                key={book.id}
+                                className={book.id === bookId ? "selected" : ""}
+                                onClick={() => handleBookSelect(book.id)}
+                            >
+                                {book.title} - {book.authors.join(", ")}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
 
             <form className="form" onSubmit={handleSubmit}>
-                <label>Title:</label>
+                <label>Discussion Title:</label>
                 <input
                     type="text"
                     value={title}

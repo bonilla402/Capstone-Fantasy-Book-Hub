@@ -54,3 +54,52 @@
 .NewDiscussion button:hover {
     background-color: #9b4d1e;
 }
+
+/* Ensure alignment with existing form styles */
+.NewDiscussion {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+/* Ensure search toolbar stays visible */
+.book-search {
+    margin-bottom: 15px;
+}
+
+.book-search input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Dropdown List */
+.book-dropdown {
+    list-style: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.book-dropdown li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.book-dropdown li.selected {
+    background-color: #c46728; /* Highlight selected book */
+    color: white;
+    font-weight: bold;
+}
+
+.book-dropdown li:hover {
+    background: #f0f0f0;
+}
