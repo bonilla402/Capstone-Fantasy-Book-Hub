@@ -101,7 +101,7 @@ class FantasyBookHubApi {
     }
 
     static async getDiscussion(discussionId) {
-        return await this.request(`discussions/${discussionId}`);
+        return await this.request(`discussions/detail/${discussionId}`);
     }
 
     // === Messages ===

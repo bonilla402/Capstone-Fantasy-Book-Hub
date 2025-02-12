@@ -1,12 +1,13 @@
 ﻿import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "../../Styles/Form.css";
 import "./NewDiscussion.css";
 
-const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId, onDiscussionAdded }) => {
+const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId}) => {
     const { groupId: routeGroupId } = useParams();
-    const groupId = propGroupId || routeGroupId; // Use prop if available, otherwise get from URL
+    const navigate = useNavigate();
+    const groupId = propGroupId || routeGroupId;
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -60,10 +61,14 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId, onDiscussionA
 
         try {
             const data = { bookId, title, content };
-            await FantasyBookHubApi.createDiscussion(groupId, data);
+            const newDiscussion = await FantasyBookHubApi.createDiscussion(groupId, data);
+
             setSuccess(true);
             setTitle("");
             setContent("");
+            
+            navigate(`/discussions/${newDiscussion.id}`);
+
         } catch (err) {
             setError(err[0] || "Failed to create discussion.");
         }

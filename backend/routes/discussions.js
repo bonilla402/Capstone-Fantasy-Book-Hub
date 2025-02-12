@@ -136,4 +136,35 @@ router.delete('/:id', ensureLoggedIn, async (req, res, next) => {
     }
 });
 
+/**
+ * GET /discussions/:discussionId
+ * Retrieves a single discussion by ID.
+ *
+ * Authorization required: Must be a member of the group.
+ */
+router.get('/detail/:discussionId', ensureLoggedIn, async (req, res, next) => {
+    try {
+        const { discussionId } = req.params;
+        const userId = res.locals.user.userId;
+        const isAdmin = res.locals.user.isAdmin;
+
+        // Fetch discussion details
+        const discussion = await Discussion.getDiscussionById(discussionId);
+        if (!discussion) throw new NotFoundError("Discussion not found.");
+
+        // Check if user is a member of the discussion's group
+        const isMember = await Group.isUserInGroup(discussion.group_id, userId);
+        const isGroupCreator = await Group.isGroupCreator(discussion.group_id, userId);
+
+        if (!isMember && !isGroupCreator && !isAdmin) {
+            throw new UnauthorizedError("You must be a group member to view this discussion.");
+        }
+
+        res.json(discussion);
+    } catch (err) {
+        return next(err);
+    }
+});
+
+
 module.exports = router;

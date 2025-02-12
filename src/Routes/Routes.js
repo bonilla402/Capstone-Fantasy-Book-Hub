@@ -8,6 +8,7 @@ import Profile from "../Components/Profile/Profile";
 import GroupList from "../Components/Groups/GroupList";
 import AddGroup from "../Components/Groups/AddGroup";
 import EditGroup from "../Components/Groups/EditGroup";
+import DiscussionPage from "../Components/Discussions/DiscussionPage";
 
 import "../Styles/Layout.css";
 import Group from "../Components/Groups/Group";
@@ -27,6 +28,7 @@ const AppRoutes = () => {
                 <Route path="/groups/:id/edit" element={<EditGroup />} />
                 <Route path="/groups/:id" element={<Group />} />
                 <Route path="/groups/:groupId/discussions/new" element={<NewDiscussion />} />
+                <Route path="/discussions/:discussionId" element={<DiscussionPage />} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </div>
