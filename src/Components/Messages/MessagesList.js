@@ -2,13 +2,13 @@
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "./MessagesList.css";
 
-const MessagesList = ({ discussionId }) => {
+const MessagesList = ({ discussionId, refreshMessages }) => {
     const [messages, setMessages] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         fetchMessages();
-    }, [discussionId]);
+    }, [discussionId, refreshMessages]);
 
     const fetchMessages = async () => {
         try {
@@ -19,7 +19,6 @@ const MessagesList = ({ discussionId }) => {
         }
     };
 
-    // Function to format timestamps
     const formatDate = (timestamp) => {
         const date = new Date(timestamp);
         return date.toLocaleString("en-US", {

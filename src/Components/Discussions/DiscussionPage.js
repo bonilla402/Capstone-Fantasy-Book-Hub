@@ -9,6 +9,7 @@ import "./DiscussionPage.css";
 const DiscussionPage = () => {
     const { discussionId } = useParams();
     const [discussion, setDiscussion] = useState(null);
+    const [refreshMessages, setRefreshMessages] = useState(false);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -38,12 +39,11 @@ const DiscussionPage = () => {
                 <p className="discussion-meta"><strong>Book:</strong> {discussion.book?.title || "Unknown"}</p>
                 <p className="discussion-content">{discussion.content}</p>
 
-                {/* Back to Group Button */}
                 <Link to={`/groups/${discussion.group_id}`} className="back-to-group">Back to Group</Link>
             </div>
             
-            <MessageInput discussionId={discussionId} onMessageAdded={() => {}} />
-            <MessagesList discussionId={discussionId} />
+            <MessageInput discussionId={discussionId} onMessageAdded={() => setRefreshMessages(prev => !prev)} />
+            <MessagesList discussionId={discussionId} refreshMessages={refreshMessages} />
         </div>
     );
 };

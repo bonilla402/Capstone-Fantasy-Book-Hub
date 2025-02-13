@@ -18,7 +18,7 @@ const MessageInput = ({ discussionId, onMessageAdded }) => {
         try {
             await FantasyBookHubApi.addMessage(discussionId, content);
             setContent("");
-            if (onMessageAdded) onMessageAdded(); // Refresh messages
+            onMessageAdded();
         } catch (err) {
             setError("Failed to send message.");
         }
