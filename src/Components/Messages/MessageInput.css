@@ -1,5 +1,12 @@
 ﻿.message-input-container {
-    margin-top: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
 }
 
 /* Title Above Message Input */
@@ -12,7 +19,6 @@
 
 .message-input-container textarea {
     width: 100%;
-    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     resize: none;

@@ -19,6 +19,18 @@ const MessagesList = ({ discussionId }) => {
         }
     };
 
+    // Function to format timestamps
+    const formatDate = (timestamp) => {
+        const date = new Date(timestamp);
+        return date.toLocaleString("en-US", {
+            month: "short",
+            day: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+
     return (
         <div className="messages-container">
             <h3>Messages</h3>
@@ -27,9 +39,12 @@ const MessagesList = ({ discussionId }) => {
                 {messages.length === 0 ? (
                     <p>No messages yet. Start the discussion!</p>
                 ) : (
-                    messages.map((msg) => (
-                        <div key={msg.id} className="message">
-                            <p className="message-user"><strong>{msg.username}:</strong></p>
+                    messages.map((msg, index) => (
+                        <div key={msg.id} className={`message ${index % 2 === 0 ? "message-even" : "message-odd"}`}>
+                            <div className="message-header">
+                                <p className="message-user"><strong>{msg.username}</strong></p>
+                                <p className="message-date">{formatDate(msg.created_at)}</p>
+                            </div>
                             <p className="message-content">{msg.content}</p>
                         </div>
                     ))

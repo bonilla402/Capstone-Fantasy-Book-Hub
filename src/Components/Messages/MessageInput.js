@@ -26,7 +26,7 @@ const MessageInput = ({ discussionId, onMessageAdded }) => {
 
     return (
         <div className="message-input-container">
-            <h3 className="message-input-title">Add a Message</h3> {/* ✅ New Title */}
+            <h3 className="message-input-title">Add a Message</h3>
             {error && <p className="error-text">{error}</p>}
             <form onSubmit={handleSubmit}>
                 <textarea
