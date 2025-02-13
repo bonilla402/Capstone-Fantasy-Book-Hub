@@ -22,7 +22,8 @@ class Discussion {
      *     "title": "Exploring Fantasy Worlds",
      *     "content": "Let's discuss the best fantasy books.",
      *     "created_by": "booklover",
-     *     "created_at": "2024-02-06T12:00:00.000Z"
+     *     "created_at": "2024-02-06T12:00:00.000Z",
+     "*     message_count": 0
      *   }
      * ]
      */
@@ -39,7 +40,8 @@ class Discussion {
                    b.title                                                                   AS book_title,
                    b.cover_image,
                    COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors,
-                   COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics
+                   COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics,
+                   (SELECT COUNT(*) FROM discussion_messages m WHERE m.discussion_id = gd.id) AS message_count
             FROM group_discussions gd
                      JOIN users u ON gd.user_id = u.id
                      JOIN books b ON gd.book_id = b.id
@@ -66,9 +68,12 @@ class Discussion {
             title: row.title,
             content: row.content,
             created_by: row.created_by,
-            created_at: row.created_at
+            created_at: row.created_at,
+            message_count: row.message_count || 0  // ✅ Ensure message count is always present
         }));
     }
+
+
 
     /**
      * Creates a new discussion within a group.

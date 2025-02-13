@@ -9,6 +9,7 @@ const DiscussionCard = ({ discussion }) => {
             <p className="discussion-book"><strong>Book:</strong> {discussion.book.title}</p>
             <p className="discussion-author"><strong>Author:</strong> {discussion.book.authors.join(", ")}</p>
             <p className="discussion-creator"><strong>Started by:</strong> {discussion.created_by}</p>
+            <p className="discussion-messages"><strong>Messages:</strong> {discussion.message_count || 0}</p>
             <Link to={`/discussions/${discussion.id}`} className="discussion-view-btn">View Discussion</Link>
         </div>
     );

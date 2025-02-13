@@ -24,7 +24,8 @@
 
 .discussion-book,
 .discussion-author,
-.discussion-creator {
+.discussion-creator,
+.discussion-messages { /* ✅ Styling for message count */
     font-size: 1rem;
     color: #5c3b1e;
     margin-bottom: 8px;
