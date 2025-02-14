@@ -20,7 +20,9 @@ class Book {
      *   }
      * ]
      */
-    static async getAllBooks() {
+    static async getAllBooks(page = 1, limit = 20) {
+        const offset = (page - 1) * limit; // ✅ Calculate correct starting point
+
         const result = await db.query(`
         SELECT b.id,
                b.title,
@@ -30,7 +32,7 @@ class Book {
                COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors,
                COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics,
                (
-                   SELECT COUNT(DISTINCT dg.id)
+                   SELECT COUNT(DISTINCT dg.id) 
                    FROM discussion_groups dg
                    JOIN group_discussions gd ON dg.id = gd.group_id
                    WHERE gd.book_id = b.id
@@ -41,20 +43,27 @@ class Book {
                  LEFT JOIN book_topics bt ON bt.book_id = b.id
                  LEFT JOIN topics t ON bt.topic_id = t.id
         GROUP BY b.id
-        ORDER BY b.title;
-    `);
+        ORDER BY b.title
+        LIMIT $1 OFFSET $2;
+    `, [limit, offset]);
 
-        return result.rows.map(row => ({
-            id: row.id,
-            title: row.title,
-            cover_image: row.cover_image,
-            year_published: row.year_published,
-            synopsis: row.synopsis,
-            authors: row.authors,
-            topics: row.topics,
-            group_count: row.group_count || 0 
-        }));
+        const totalBooks = await db.query(`SELECT COUNT(*) AS total FROM books`);
+
+        return {
+            books: result.rows.map(row => ({
+                id: row.id,
+                title: row.title,
+                cover_image: row.cover_image,
+                year_published: row.year_published,
+                synopsis: row.synopsis,
+                authors: row.authors,
+                topics: row.topics,
+                group_count: row.group_count || 0
+            })),
+            totalBooks: totalBooks.rows[0].total
+        };
     }
+
 
 
 

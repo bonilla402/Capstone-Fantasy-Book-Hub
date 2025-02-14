@@ -118,9 +118,9 @@ class FantasyBookHubApi {
     static async getBook(bookId) {
         return await this.request(`books/${bookId}`);
     }
-    
-    static async getAllBooks() {
-        return await this.request("books");
+
+    static async getAllBooks(page = 1, limit = 20) {
+        return await this.request(`books?page=${page}&limit=${limit}`);
     }
 
 }

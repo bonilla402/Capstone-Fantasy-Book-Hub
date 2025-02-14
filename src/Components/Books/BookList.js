@@ -1,35 +1,57 @@
-﻿import React, {useState, useEffect} from "react";
+﻿import React, { useState, useEffect } from "react";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import BookCard from "./BookCard";
 import "./BookList.css";
 
 const BookList = () => {
     const [books, setBooks] = useState([]);
-    const [error, setError] = useState(null);
+    const [page, setPage] = useState(1);
+    const [totalBooks, setTotalBooks] = useState(0);
+    const booksPerPage = 20;
 
     useEffect(() => {
         async function fetchBooks() {
             try {
-                const data = await FantasyBookHubApi.getAllBooks();
-                setBooks(data);
+                const data = await FantasyBookHubApi.getAllBooks(page, booksPerPage);
+                setBooks(data.books);
+                setTotalBooks(data.totalBooks);
             } catch (err) {
-                setError("Failed to load books.");
+                console.error("Failed to load books", err);
             }
         }
-
         fetchBooks();
-    }, []);
+    }, [page]);
+
+    const totalPages = Math.ceil(totalBooks / booksPerPage);
 
     return (
         <div className="book-list-container">
             <h2>Books</h2>
-            {error && <p className="error-text">{error}</p>}
             <div className="book-list">
                 {books.length === 0 ? (
                     <p>No books available.</p>
                 ) : (
-                    books.map((book) => <BookCard key={book.id} book={book}/>)
+                    books.map((book) => <BookCard key={book.id} book={book} />)
                 )}
+            </div>
+
+            {/* ✅ Pagination Controls */}
+            <div className="pagination">
+                <button
+                    onClick={() => setPage(page - 1)}
+                    disabled={page === 1}
+                    className="pagination-btn"
+                >
+                    Previous
+                </button>
+                <span>Page {page} of {totalPages}</span>
+                <button
+                    onClick={() => setPage(page + 1)}
+                    disabled={page >= totalPages}
+                    className="pagination-btn"
+                >
+                    Next
+                </button>
             </div>
         </div>
     );

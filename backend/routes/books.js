@@ -24,11 +24,13 @@ const Book = require('../models/bookModel');
  *   }
  * ]
  */
-router.get('/', ensureLoggedIn, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
     try {
-        const books = await Book.getAllBooks();
-        if (books.length === 0) throw new NotFoundError("No books found.");
-        res.json(books);
+        const page = parseInt(req.query.page) || 1;  // Default to page 1
+        const limit = parseInt(req.query.limit) || 20;  // Default to 20 books per page
+
+        const data = await Book.getAllBooks(page, limit);
+        res.json(data);
     } catch (err) {
         return next(err);
     }
