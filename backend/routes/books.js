@@ -79,6 +79,21 @@ router.get('/search', ensureLoggedIn, async (req, res, next) => {
     }
 });
 
+router.get("/search/dynamic", async (req, res) => {
+    try {
+        const { query } = req.query;
+        if (!query || query.length < 3) {
+            return res.json([]); // Return empty list if query is too short
+        }
+
+        const books = await Book.searchBooksByQuery(query);
+        res.json(books);
+    } catch (error) {
+        console.error("Error searching books:", error);
+        res.status(500).json({ error: "Server error while searching books." });
+    }
+});
+
 /**
  * POST /books
  * Adds a new book to the database.

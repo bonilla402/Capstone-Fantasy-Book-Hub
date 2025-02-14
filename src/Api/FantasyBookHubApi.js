@@ -123,6 +123,17 @@ class FantasyBookHubApi {
         return await this.request(`books?page=${page}&limit=${limit}`);
     }
 
+    static async searchBooksDynamic(query) {
+        try {
+            const response = await axios.get(`${BASE_URL}/books/search/dynamic`, { params: { query } });
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching books:", error);
+            return [];
+        }
+    }
+
+
 }
 
 export default FantasyBookHubApi;

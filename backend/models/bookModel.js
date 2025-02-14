@@ -136,6 +136,34 @@ class Book {
         const result = await db.query(query, params);
         return result.rows;
     }
+
+    static async searchBooksByQuery(query, limit = 10) {
+        if (!query || query.length < 3) {
+            return [];
+        }
+
+        const sql = `
+        SELECT DISTINCT b.id,
+               b.title,
+               b.cover_image,
+               b.year_published,
+               COALESCE(ARRAY_AGG(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '{}') AS authors
+        FROM books b
+        LEFT JOIN book_authors ba ON ba.book_id = b.id
+        LEFT JOIN authors a ON ba.author_id = a.id
+        WHERE b.title ILIKE $1 
+           OR a.name ILIKE $1  -- ✅ Now directly filtering authors
+        GROUP BY b.id
+        ORDER BY b.title
+        LIMIT $2;
+    `;
+
+        console.log("Executing query:", sql, "with params:", [`%${query}%`, limit]);
+
+        const result = await db.query(sql, [`%${query}%`, limit]);
+        return result.rows;
+    }
+
 }
 
 module.exports = Book;

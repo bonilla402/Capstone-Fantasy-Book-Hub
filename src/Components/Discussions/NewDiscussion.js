@@ -1,10 +1,10 @@
-﻿import React, { useState, useEffect } from "react";
+﻿import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "../../Styles/Form.css";
 import "./NewDiscussion.css";
 
-const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId}) => {
+const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
     const { groupId: routeGroupId } = useParams();
     const navigate = useNavigate();
     const groupId = propGroupId || routeGroupId;
@@ -12,41 +12,39 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId}) => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [bookId, setBookId] = useState(propBookId || null);
-    const [books, setBooks] = useState([]);
     const [filteredBooks, setFilteredBooks] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        async function fetchBooks() {
-            try {
-                const allBooks = await FantasyBookHubApi.getAllBooks();
-                setBooks(allBooks);
-                setFilteredBooks(allBooks);
-            } catch (err) {
-                console.error("Error fetching books:", err);
-            }
+    // Function to fetch books dynamically based on user input
+    const fetchBooks = async (query) => {
+        if (query.length < 3) {
+            setFilteredBooks([]); // Clear results if query is too short
+            return;
         }
-        fetchBooks();
-    }, []);
+
+        setLoading(true);
+        try {
+            const books = await FantasyBookHubApi.searchBooksDynamic(query);
+            setFilteredBooks(books);
+        } catch (err) {
+            console.error("Error searching books:", err);
+        }
+        setLoading(false);
+    };
 
     const handleSearchChange = (e) => {
-        const text = e.target.value.toLowerCase();
+        const text = e.target.value;
         setSearchText(text);
-        if (text.length >= 3) {
-            const filtered = books.filter((book) =>
-                book.title.toLowerCase().includes(text) ||
-                book.authors.some(author => author.toLowerCase().includes(text))
-            );
-            setFilteredBooks(filtered);
-        } else {
-            setFilteredBooks(books);
-        }
+        fetchBooks(text); // Call backend dynamically
     };
 
     const handleBookSelect = (selectedBookId) => {
         setBookId(selectedBookId);
+        setSearchText(""); // Clear search text after selection
+        setFilteredBooks([]); // Hide dropdown after selection
     };
 
     const handleSubmit = async (e) => {
@@ -62,13 +60,10 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId}) => {
         try {
             const data = { bookId, title, content };
             const newDiscussion = await FantasyBookHubApi.createDiscussion(groupId, data);
-
             setSuccess(true);
             setTitle("");
             setContent("");
-            
             navigate(`/discussions/${newDiscussion.id}`);
-
         } catch (err) {
             setError(err[0] || "Failed to create discussion.");
         }
@@ -79,8 +74,7 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId}) => {
             <h2>Start a New Discussion</h2>
             {error && <p className="error-text">{error}</p>}
             {success && <p className="success-text">Discussion created successfully!</p>}
-
-            {/* Search toolbar remains visible */}
+            
             <div className="book-search">
                 <label>Search for a book:</label>
                 <input
@@ -89,6 +83,7 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId}) => {
                     onChange={handleSearchChange}
                     placeholder="Type at least 3 characters..."
                 />
+                {loading && <p className="loading-text">Searching...</p>}
                 {filteredBooks.length > 0 && (
                     <ul className="book-dropdown">
                         {filteredBooks.map((book) => (
