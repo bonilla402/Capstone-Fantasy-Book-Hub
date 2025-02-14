@@ -7,7 +7,7 @@ const BookList = () => {
     const [books, setBooks] = useState([]);
     const [page, setPage] = useState(1);
     const [totalBooks, setTotalBooks] = useState(0);
-    const booksPerPage = 20;
+    const booksPerPage = 10;
 
     useEffect(() => {
         async function fetchBooks() {
@@ -26,7 +26,25 @@ const BookList = () => {
 
     return (
         <div className="book-list-container">
-            <h2>Books</h2>
+            
+            <div className="pagination">
+                <button
+                    onClick={() => setPage(page - 1)}
+                    disabled={page === 1}
+                    className="pagination-btn"
+                >
+                    Previous
+                </button>
+                <span>Page {page} of {totalPages}</span>
+                <button
+                    onClick={() => setPage(page + 1)}
+                    disabled={page >= totalPages}
+                    className="pagination-btn"
+                >
+                    Next
+                </button>
+            </div>
+
             <div className="book-list">
                 {books.length === 0 ? (
                     <p>No books available.</p>
@@ -35,7 +53,7 @@ const BookList = () => {
                 )}
             </div>
 
-            {/* ✅ Pagination Controls */}
+
             <div className="pagination">
                 <button
                     onClick={() => setPage(page - 1)}
