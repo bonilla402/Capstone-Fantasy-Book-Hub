@@ -1,0 +1,13 @@
+﻿.book-list-container {
+    text-align: center;
+    padding: 20px;
+}
+
+
+.book-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px; /* ✅ Adds spacing between books */
+    justify-content: center; /* ✅ Centers books */
+    padding: 20px;
+}

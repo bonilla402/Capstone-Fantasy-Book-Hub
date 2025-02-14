@@ -19,6 +19,7 @@ const NavBar = () => {
             <div className="nav-links">
                 {user ? (
                     <>
+                        <NavLink to="/books" className="nav-link">Books</NavLink>
                         <div className="nav-dropdown">
                             <NavLink to="/groups" className="nav-link">Groups</NavLink>
                             <div className="dropdown-menu">
