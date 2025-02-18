@@ -12,6 +12,7 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [bookId, setBookId] = useState(propBookId || null);
+    const [selectedBook, setSelectedBook] = useState(null);
     const [filteredBooks, setFilteredBooks] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [error, setError] = useState(null);
@@ -41,10 +42,16 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
         fetchBooks(text); // Call backend dynamically
     };
 
-    const handleBookSelect = (selectedBookId) => {
+    const handleBookSelect = (selectedBookId, selectedTitle, selectedAuthors, selectedCover) => {
         setBookId(selectedBookId);
-        setSearchText(""); // Clear search text after selection
-        setFilteredBooks([]); // Hide dropdown after selection
+        setSearchText(selectedTitle);
+        setSelectedBook({
+            id: selectedBookId,
+            title: selectedTitle,
+            authors: selectedAuthors,
+            cover: selectedCover
+        });
+        setFilteredBooks([]);
     };
 
     const handleSubmit = async (e) => {
@@ -90,7 +97,7 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
                             <li
                                 key={book.id}
                                 className={book.id === bookId ? "selected" : ""}
-                                onClick={() => handleBookSelect(book.id)}
+                                onClick={() => handleBookSelect(book.id, book.title, book.authors.join(", "), book.cover_image)}
                             >
                                 {book.title} - {book.authors.join(", ")}
                             </li>
@@ -99,6 +106,16 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
                 )}
             </div>
 
+            {selectedBook && (
+                <div className="selected-book">
+                    <img src={selectedBook.cover} alt={selectedBook.title} className="selected-book-cover" />
+                    <div className="selected-book-info">
+                        <p className="selected-book-title">{selectedBook.title}</p>
+                        <p className="selected-book-authors">{selectedBook.authors}</p>
+                    </div>
+                </div>
+            )}
+            
             <form className="form" onSubmit={handleSubmit}>
                 <label>Discussion Title:</label>
                 <input
