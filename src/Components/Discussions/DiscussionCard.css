@@ -5,42 +5,64 @@
     padding: 16px;
     margin-bottom: 15px;
     box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
-    width: 300px;
+    width: 320px;
     transition: transform 0.2s ease-in-out;
     font-family: "Garamond", serif;
+    display: flex;
+    align-items: center;
 }
 
-.discussion-card:hover {
-    transform: scale(1.02);
+.discussion-content {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.discussion-book-cover {
+    width: 133px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #b5651d;
+}
+
+.discussion-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .discussion-title {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: #7a3b1e;
-    margin-bottom: 10px;
+    margin: 0 0 20px 0;
     font-family: "Georgia", serif;
 }
 
 .discussion-book,
 .discussion-author,
 .discussion-creator,
-.discussion-messages { /* ✅ Styling for message count */
-    font-size: 1rem;
+.discussion-messages {
+    font-size: 0.9rem;
     color: #5c3b1e;
-    margin-bottom: 8px;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
 }
+
 
 .discussion-view-btn {
     display: inline-block;
     background-color: #d48236;
     color: white;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 6px;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
     transition: background-color 0.2s ease-in-out;
+    text-align: center;
+    margin-top: 8px; /* ✅ Add some space between the last text and button */
 }
 
 .discussion-view-btn:hover {
