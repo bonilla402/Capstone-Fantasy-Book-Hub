@@ -60,3 +60,50 @@
     max-width: 800px;
     margin: 0 auto;
 }
+
+/* Header Section: Book Cover & Discussion Info */
+.discussion-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Right Section: Title, Book, and Author */
+.discussion-info-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Discussion Title First */
+.discussion-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #7a3b1e;
+    margin: 0 0 15px 0;
+}
+
+/* Book Info Below the Title */
+.discussion-book-title,
+.discussion-book-author {
+    font-size: 1.1rem;
+    color: #5c3b1e;
+    margin: 0 0 10px 0;
+}
+
+/* User Info at the Bottom */
+.discussion-meta {
+    font-size: 1rem;
+    font-style: italic;
+    color: #5c3b1e;
+    margin: 0;
+}
+
+.discussion-cover {
+    width:200px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #b5651d;
+}

@@ -34,14 +34,31 @@ const DiscussionPage = () => {
     return (
         <div className="discussion-page">
             <div className="form-container">
-                <h2>{discussion.title}</h2>
-                <p className="discussion-meta"><strong>By:</strong> {discussion.created_by}</p>
-                <p className="discussion-meta"><strong>Book:</strong> {discussion.book?.title || "Unknown"}</p>
+                <div className="discussion-header">
+                    {/* Book Cover */}
+                    {discussion.book?.cover_image && (
+                        <img
+                            src={discussion.book.cover_image}
+                            alt={discussion.book.title}
+                            className="discussion-cover"
+                        />
+                    )}
+
+                    {/* Right Section (Title, Book Info, User) */}
+                    <div className="discussion-info-container">
+                        <h2 className="discussion-title">{discussion.title}</h2>
+                        <p className="discussion-book-title"><strong>Book:</strong> {discussion.book?.title || "Unknown"}</p>
+                        <p className="discussion-book-author"><strong>Author:</strong> {discussion.book?.authors?.join(", ") || "Unknown"}</p>
+                        <p className="discussion-meta"><strong>By:</strong> {discussion.created_by}</p>
+                    </div>
+                </div>
+
+                {/* Discussion Content */}
                 <p className="discussion-content">{discussion.content}</p>
 
                 <Link to={`/groups/${discussion.group_id}`} className="back-to-group">Back to Group</Link>
             </div>
-            
+
             <MessageInput discussionId={discussionId} onMessageAdded={() => setRefreshMessages(prev => !prev)} />
             <MessagesList discussionId={discussionId} refreshMessages={refreshMessages} />
         </div>
