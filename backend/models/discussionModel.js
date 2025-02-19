@@ -119,11 +119,16 @@ class Discussion {
         const result = await db.query(`
             SELECT d.id, d.group_id, d.title, d.content, d.created_at,
                    d.user_id, u.username AS created_by,
-                   b.id AS book_id, b.title AS book_title, b.cover_image
+                   b.id AS book_id, b.title AS book_title, b.cover_image,
+                   COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors
             FROM group_discussions d
-            JOIN users u ON d.user_id = u.id
-            JOIN books b ON d.book_id = b.id
+                     JOIN users u ON d.user_id = u.id
+                     JOIN books b ON d.book_id = b.id
+                     LEFT JOIN book_authors ba ON ba.book_id = b.id
+                     LEFT JOIN authors a ON ba.author_id = a.id
             WHERE d.id = $1
+            GROUP BY d.id, d.group_id, d.title, d.content, d.created_at, d.user_id, u.username,
+                     b.id, b.title, b.cover_image
         `, [discussionId]);
 
         if (result.rows.length === 0) return null;
@@ -136,7 +141,8 @@ class Discussion {
             book: {
                 id: row.book_id,
                 title: row.book_title,
-                cover_image: row.cover_image
+                cover_image: row.cover_image,
+                authors: row.authors
             },
             title: row.title,
             content: row.content,
