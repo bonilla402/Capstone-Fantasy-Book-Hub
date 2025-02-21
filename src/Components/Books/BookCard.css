@@ -7,7 +7,10 @@
     text-align: center;
     transition: transform 0.2s ease-in-out;
     font-family: "Garamond", serif;
+    width: 230px;
+    flex: none;
 }
+
 
 .book-card:hover {
     transform: scale(1.02);

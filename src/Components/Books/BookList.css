@@ -3,11 +3,10 @@
     margin-bottom: 20px;
 }
 
-
 .book-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 20px;
     padding: 20px;
 }
