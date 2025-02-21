@@ -38,7 +38,6 @@ class Book {
                                 JOIN group_discussions gd ON dg.id = gd.group_id
                        WHERE gd.book_id = b.id
                    ) AS group_count,
-                   -- Correctly calculate average rating
                    COALESCE((
                                 SELECT ROUND(AVG(r.rating), 1) || ' of ' || COUNT(r.id) || ' reviews'
                                 FROM reviews r WHERE r.book_id = b.id
@@ -111,6 +110,12 @@ class Book {
             b.created_at,
             COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors,
             COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics,
+            (
+                SELECT COUNT(DISTINCT dg.id)
+                FROM discussion_groups dg
+                         JOIN group_discussions gd ON dg.id = gd.group_id
+                WHERE gd.book_id = b.id
+            ) AS group_count,
             -- Correctly calculate average rating
             COALESCE((
                 SELECT ROUND(AVG(r.rating), 1) || ' of ' || COUNT(r.id) || ' reviews'

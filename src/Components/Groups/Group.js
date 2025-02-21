@@ -96,9 +96,11 @@ const Group = () => {
                             {isMember ? "Leave Group" : "Join Group"}
                         </button>
 
-                        <button className="discussion-button" onClick={() => navigate(`/groups/${id}/discussions/new`)}>
-                            Start New Discussion
-                        </button>
+                        {isMember && (
+                            <button className="discussion-button" onClick={() => navigate(`/groups/${id}/discussions/new`)}>
+                                Start New Discussion
+                            </button>
+                        )}
 
                         <button className="back-button" onClick={() => navigate("/groups")}>
                             Back to All Groups
@@ -110,12 +112,13 @@ const Group = () => {
                     <GroupMembersList groupId={id} refreshTrigger={refreshTrigger} />
                 </div>
             </div>
-
-            {/* Discussions Section */}
-            <div className="group-discussions-section">
-                <h3>Group Discussions</h3>
-                <DiscussionList groupId={id} />
-            </div>
+            
+            {isMember && (
+                <div className="group-discussions-section">
+                    <h3>Group Discussions</h3>
+                    <DiscussionList groupId={id} />
+                </div>
+            )}
         </div>
     );
 
