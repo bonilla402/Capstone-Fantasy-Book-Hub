@@ -35,6 +35,7 @@ const BookPage = () => {
                     <img src={book.cover_image} alt={book.title} className="book-cover-large" />
                     <div className="book-info">
                         <h2 className="book-title">{book.title}</h2>
+                        <p className="book-average-rating"><strong>Average rating:</strong> {book.average_rating}</p>
                         <p className="book-authors"><strong>Author(s):</strong> {book.authors.join(", ")}</p>
                         <p className="book-year"><strong>Published:</strong> {book.year_published}</p>
                         <p className="book-topics"><strong>Topics:</strong> {book.topics.join(", ")}</p>

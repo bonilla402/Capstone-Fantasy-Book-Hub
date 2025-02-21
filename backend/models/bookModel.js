@@ -16,7 +16,8 @@ class Book {
      *     "created_at": "2024-02-06T12:00:00.000Z",
      *     "authors": ["J.R.R. Tolkien"],
      *     "topics": ["Fantasy", "Adventure"],
-     *     "group_count": groups featuring the book on its dicussions
+     *     "group_count": groups featuring the book on its discussions,
+     *     "average_rating": "4.5 of 120 reviews"
      *   }
      * ]
      */
@@ -24,28 +25,33 @@ class Book {
         const offset = (page - 1) * limit;
 
         const result = await db.query(`
-        SELECT b.id,
-               b.title,
-               b.cover_image,
-               b.year_published,
-               b.synopsis,
-               COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors,
-               COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics,
-               (
-                   SELECT COUNT(DISTINCT dg.id) 
-                   FROM discussion_groups dg
-                   JOIN group_discussions gd ON dg.id = gd.group_id
-                   WHERE gd.book_id = b.id
-               ) AS group_count
-        FROM books b
-                 LEFT JOIN book_authors ba ON ba.book_id = b.id
-                 LEFT JOIN authors a ON ba.author_id = a.id
-                 LEFT JOIN book_topics bt ON bt.book_id = b.id
-                 LEFT JOIN topics t ON bt.topic_id = t.id
-        GROUP BY b.id
-        ORDER BY b.title
-        LIMIT $1 OFFSET $2;
-    `, [limit, offset]);
+            SELECT b.id,
+                   b.title,
+                   b.cover_image,
+                   b.year_published,
+                   b.synopsis,
+                   COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors,
+                   COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics,
+                   (
+                       SELECT COUNT(DISTINCT dg.id)
+                       FROM discussion_groups dg
+                                JOIN group_discussions gd ON dg.id = gd.group_id
+                       WHERE gd.book_id = b.id
+                   ) AS group_count,
+                   -- Correctly calculate average rating
+                   COALESCE((
+                                SELECT ROUND(AVG(r.rating), 1) || ' of ' || COUNT(r.id) || ' reviews'
+                                FROM reviews r WHERE r.book_id = b.id
+                            ), 'No reviews') AS average_rating
+            FROM books b
+                     LEFT JOIN book_authors ba ON ba.book_id = b.id
+                     LEFT JOIN authors a ON ba.author_id = a.id
+                     LEFT JOIN book_topics bt ON bt.book_id = b.id
+                     LEFT JOIN topics t ON bt.topic_id = t.id
+            GROUP BY b.id
+            ORDER BY b.title
+            LIMIT $1 OFFSET $2;
+        `, [limit, offset]);
 
         const totalBooks = await db.query(`SELECT COUNT(*) AS total FROM books`);
 
@@ -58,12 +64,13 @@ class Book {
                 synopsis: row.synopsis,
                 authors: row.authors,
                 topics: row.topics,
-                group_count: row.group_count || 0
+                group_count: row.group_count || 0,
+                average_rating: row.average_rating
             })),
             totalBooks: totalBooks.rows[0].total
         };
     }
-    
+
     /**
      * Searches for books by title, author, or topic.
      *
@@ -83,7 +90,8 @@ class Book {
      *     "synopsis": "A young wizard discovers his magical heritage...",
      *     "created_at": "2024-02-06T12:00:00.000Z",
      *     "authors": ["J.K. Rowling"],
-     *     "topics": ["Magic", "Adventure"]
+     *     "topics": ["Magic", "Adventure"],
+     *     "average_rating": "4.8 of 345 reviews"
      *   }
      * ]
      */
@@ -102,7 +110,12 @@ class Book {
             b.synopsis,
             b.created_at,
             COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors,
-            COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics
+            COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics,
+            -- Correctly calculate average rating
+            COALESCE((
+                SELECT ROUND(AVG(r.rating), 1) || ' of ' || COUNT(r.id) || ' reviews'
+                FROM reviews r WHERE r.book_id = b.id
+            ), 'No reviews') AS average_rating
         FROM books b
         LEFT JOIN book_authors ba ON b.id = ba.book_id
         LEFT JOIN authors a ON ba.author_id = a.id
@@ -129,8 +142,8 @@ class Book {
             params.push(`%${topic}%`);
             paramIndex++;
         }
-        
-        query += `
+
+        query += ` 
         GROUP BY b.id
         ORDER BY b.title ASC
         LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
@@ -177,7 +190,12 @@ class Book {
                    b.year_published,
                    b.synopsis,
                    COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors,
-                   COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics
+                   COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics,
+                   -- Correctly calculate average rating
+                   COALESCE((
+                       SELECT ROUND(AVG(r.rating), 1) || ' of ' || COUNT(r.id) || ' reviews'
+                       FROM reviews r WHERE r.book_id = b.id
+                   ), 'No reviews') AS average_rating
             FROM books b
                      LEFT JOIN book_authors ba ON ba.book_id = b.id
                      LEFT JOIN authors a ON ba.author_id = a.id
@@ -206,10 +224,10 @@ class Book {
             synopsis: book.synopsis,
             authors: book.authors,
             topics: book.topics,
+            average_rating: book.average_rating,
             groups: groupResults.rows || []
         };
     }
-
 }
 
 module.exports = Book;

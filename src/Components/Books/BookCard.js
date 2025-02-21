@@ -8,6 +8,7 @@ const BookCard = ({ book }) => {
             <img src={book.cover_image} alt={book.title} className="book-cover-small" />
             <div className="book-info">
                 <h3 className="book-title">{book.title}</h3>
+                <p className="book-average-rating"><strong>Average rating:</strong> {book.average_rating}</p>
                 <p className="book-authors"><strong>Author(s):</strong> {book.authors.join(", ")}</p>
                 <p className="book-year"><strong>Published:</strong> {book.year_published}</p>
                 <p className="book-groups"><strong>Groups Discussing:</strong> {book.group_count || 0}</p>
