@@ -47,27 +47,22 @@ const Group = () => {
                 await FantasyBookHubApi.leaveGroup(id);
                 setIsMember(false);
                 setSuccessMessage("You have left the group.");
-                setGroup(prevGroup => ({
-                    ...prevGroup,
-                    member_count: prevGroup.member_count - 1
-                }));
             } else {
                 await FantasyBookHubApi.joinGroup(id);
                 setIsMember(true);
                 setSuccessMessage("You have joined the group.");
-                setGroup(prevGroup => ({
-                    ...prevGroup,
-                    member_count: prevGroup.member_count + 1
-                }));
             }
+            
+            const updatedGroup = await FantasyBookHubApi.getGroup(id);
+            setGroup(updatedGroup);
 
             setRefreshTrigger(prev => !prev);
-
             setTimeout(() => setSuccessMessage(""), 3000);
         } catch (err) {
             setError("Error updating group membership.");
         }
     };
+
 
     if (loading) return <p>Loading group details...</p>;
     if (error) return <p className="error-text">{error}</p>;
