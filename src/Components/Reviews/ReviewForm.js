@@ -49,14 +49,16 @@ const ReviewForm = ({ userReview, onSubmit, onDelete }) => {
                     onChange={handleChange}
                     required
                 />
+                
+                <div className="review-form-buttons">
+                    <button type="submit" className="submit-review-btn">{userReview ? "Update Review" : "Submit Review"}</button>
 
-                <button type="submit">{userReview ? "Update Review" : "Submit Review"}</button>
-
-                {userReview && (
-                    <button type="button" className="delete-review-btn" onClick={handleDelete}>
-                        Delete Review
-                    </button>
-                )}
+                    {userReview && (
+                        <button type="button" className="delete-review-btn" onClick={handleDelete}>
+                            Delete Review
+                        </button>
+                    )}
+                </div>
             </form>
         </div>
     );

@@ -29,18 +29,24 @@
 }
 
 /* Review Delete Button */
-.delete-review-btn {
+.review-delete-btn {
+    width: auto;
+    min-width: 100px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    text-align: center;
+    line-height: 1.2;
     background-color: #d9534f;
     color: white;
     border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
-    margin-top: 10px;
+    display: block;
+    margin: 10px auto 0 auto;
 }
 
-.delete-review-btn:hover {
+.review-delete-btn:hover {
     background-color: #b52b27;
 }
