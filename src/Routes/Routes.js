@@ -14,6 +14,7 @@ import NewDiscussion from "../Components/Discussions/NewDiscussion";
 import BookList from "../Components/Books/BookList";
 
 import "../Styles/Layout.css";
+import BookPage from "../Components/Books/BookPage";
 
 const AppRoutes = () => {
     return (
@@ -25,6 +26,7 @@ const AppRoutes = () => {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/profile/edit" element={<EditProfile />} />
                 <Route path="/books" element={<BookList />} />
+                <Route path="/books/:id" element={<BookPage />} />
                 <Route path="/groups" element={<GroupList />} />
                 <Route path="/groups/create" element={<AddGroup />} />
                 <Route path="/groups/:id/edit" element={<EditGroup />} />

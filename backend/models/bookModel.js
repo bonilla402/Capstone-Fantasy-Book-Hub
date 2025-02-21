@@ -21,7 +21,7 @@ class Book {
      * ]
      */
     static async getAllBooks(page = 1, limit = 20) {
-        const offset = (page - 1) * limit; // ✅ Calculate correct starting point
+        const offset = (page - 1) * limit;
 
         const result = await db.query(`
         SELECT b.id,
@@ -152,7 +152,7 @@ class Book {
         LEFT JOIN book_authors ba ON ba.book_id = b.id
         LEFT JOIN authors a ON ba.author_id = a.id
         WHERE b.title ILIKE $1 
-           OR a.name ILIKE $1  -- ✅ Now directly filtering authors
+           OR a.name ILIKE $1
         GROUP BY b.id
         ORDER BY b.title
         LIMIT $2;
@@ -163,6 +163,47 @@ class Book {
         const result = await db.query(sql, [`%${query}%`, limit]);
         return result.rows;
     }
+
+    static async getBookById(bookId) {
+        const result = await db.query(`
+        SELECT b.id,
+               b.title,
+               b.cover_image,
+               b.year_published,
+               b.synopsis,
+               COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors,
+               COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics,
+               (
+                   SELECT COUNT(DISTINCT dg.id) 
+                   FROM discussion_groups dg
+                   JOIN group_discussions gd ON dg.id = gd.group_id
+                   WHERE gd.book_id = b.id
+               ) AS group_count
+        FROM books b
+        LEFT JOIN book_authors ba ON ba.book_id = b.id
+        LEFT JOIN authors a ON ba.author_id = a.id
+        LEFT JOIN book_topics bt ON bt.book_id = b.id
+        LEFT JOIN topics t ON bt.topic_id = t.id
+        WHERE b.id = $1
+        GROUP BY b.id
+    `, [bookId]);
+
+        if (result.rows.length === 0) return null;
+
+        const row = result.rows[0];
+
+        return {
+            id: row.id,
+            title: row.title,
+            cover_image: row.cover_image,
+            year_published: row.year_published,
+            synopsis: row.synopsis,
+            authors: row.authors,
+            topics: row.topics,
+            group_count: row.group_count || 0
+        };
+    }
+
 
 }
 

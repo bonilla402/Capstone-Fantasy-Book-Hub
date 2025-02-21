@@ -132,8 +132,6 @@ class FantasyBookHubApi {
             return [];
         }
     }
-
-
 }
 
 export default FantasyBookHubApi;
