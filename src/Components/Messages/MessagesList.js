@@ -38,11 +38,11 @@ const MessagesList = ({ discussionId, refreshMessages }) => {
                 {messages.length === 0 ? (
                     <p>No messages yet. Start the discussion!</p>
                 ) : (
-                    messages.map((msg, index) => (
-                        <div key={msg.id} className={`message ${index % 2 === 0 ? "message-even" : "message-odd"}`}>
+                    messages.map((msg) => (
+                        <div key={msg.id} className="message">
                             <div className="message-header">
-                                <p className="message-user"><strong>{msg.username}</strong></p>
-                                <p className="message-date">{formatDate(msg.created_at)}</p>
+                                <span><strong>{msg.username}</strong></span>
+                                <span className="message-date">{formatDate(msg.created_at)}</span>
                             </div>
                             <p className="message-content">{msg.content}</p>
                         </div>

@@ -1,48 +1,48 @@
-﻿.messages-container {
+﻿/* Messages Section (Matches Reviews Completely) */
+.messages-container {
     width: 100%;
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
-    background: #faebd7; /* ✅ Antique white, closer to the "Add a Message" box */
+    background: #f9f6f2;
     border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
-    text-align: center;
-}
-
-/* Messages List */
-.messages-list {
+    border: 2px solid #b5651d;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
     text-align: left;
-    margin-bottom: 20px;
 }
 
-/* Alternating Message Backgrounds */
-.message-even {
-    background: #fdf6e3; /* ✅ Light parchment */
+/* Title for Messages */
+.messages-container h3 {
+    font-size: 1.5rem;
+    color: #7a3b1e;
+    margin-bottom: 15px;
 }
 
-.message-odd {
-    background: #eed9b7; /* ✅ Soft tan, slightly darker for contrast */
+/* Messages List Wrapper */
+.messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
+/* Individual Message Box */
 .message {
-    padding: 10px;
-    border-bottom: 1px solid #c49a6c;
+    background: #fff;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    margin-bottom: 10px;
+    padding: 15px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-/* Message Header: User + Date */
+/* Message Header */
 .message-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 5px;
-}
-
-/* Username */
-.message-user {
     font-weight: bold;
-    color: #8b5e3b;
+    font-size: 1.1rem;
+    color: #c46728;
+    margin-bottom: 5px;
 }
 
 /* Message Date */
@@ -52,14 +52,10 @@
     font-style: italic;
 }
 
-/* ✅ Separate Background for Message Content */
+/* Message Text */
 .message-content {
-    background: #f9e5bb; /* ✅ Warmer mustard-tan to match buttons */
-    color: #4a2f27; /* Deep brown for readability */
     font-size: 1rem;
-    padding: 12px;
-    border-radius: 8px;
+    color: #333;
     line-height: 1.5;
-    margin-top: 5px;
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 8px;
 }
