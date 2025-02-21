@@ -1,0 +1,46 @@
+﻿/* Individual Review */
+.review {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Review Header: User Name and Rating */
+.review p:first-child {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #5c3b1e;
+}
+
+/* Review Rating */
+.review p strong {
+    color: #c46728;
+}
+
+/* Review Text */
+.review-text {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+/* Review Delete Button */
+.delete-review-btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    margin-top: 10px;
+}
+
+.delete-review-btn:hover {
+    background-color: #b52b27;
+}

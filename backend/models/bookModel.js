@@ -63,10 +63,7 @@ class Book {
             totalBooks: totalBooks.rows[0].total
         };
     }
-
-
-
-
+    
     /**
      * Searches for books by title, author, or topic.
      *

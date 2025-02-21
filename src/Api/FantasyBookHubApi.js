@@ -104,7 +104,7 @@ class FantasyBookHubApi {
         return await this.request(`discussions/detail/${discussionId}`);
     }
 
-// === Messages ===
+    // === Messages ===
     static async getMessages(discussionId) {
         return await this.request(`messages/${discussionId}`);
     }
@@ -137,6 +137,27 @@ class FantasyBookHubApi {
         return await this.request("books/search", filters, "get");
     }
 
+    // === Reviews Routes ===
+
+    // Get all reviews for a book
+    static async getReviews(bookId) {
+        return await this.request(`reviews/book/${bookId}`);
+    }
+
+    // Add a new review
+    static async addReview(bookId, rating, reviewText) {
+        return await this.request("reviews", { bookId, rating, reviewText }, "post");
+    }
+
+    // Update an existing review
+    static async updateReview(reviewId, rating, reviewText) {
+        return await this.request(`reviews/${reviewId}`, { rating, reviewText }, "patch");
+    }
+
+    // Delete a review
+    static async deleteReview(reviewId) {
+        return await this.request(`reviews/${reviewId}`, {}, "delete");
+    }
 }
 
 export default FantasyBookHubApi;
