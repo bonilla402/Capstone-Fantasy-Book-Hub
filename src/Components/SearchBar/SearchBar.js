@@ -2,13 +2,15 @@
 import "./SearchBar.css";
 
 const SearchBar = ({ onSearch, hideGroupFilters = false }) => {
-    const [filters, setFilters] = useState({
+    const initialFilters = {
         author: "",
         title: "",
         topic: "",
         groupTitle: "",
         groupDescription: ""
-    });
+    };
+
+    const [filters, setFilters] = useState(initialFilters);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -22,6 +24,13 @@ const SearchBar = ({ onSearch, hideGroupFilters = false }) => {
         e.preventDefault();
         if (onSearch) {
             onSearch(filters);
+        }
+    };
+
+    const handleReset = () => {
+        setFilters(initialFilters);
+        if (onSearch) {
+            onSearch(initialFilters);
         }
     };
 
@@ -43,7 +52,10 @@ const SearchBar = ({ onSearch, hideGroupFilters = false }) => {
                     </>
                 )}
             </div>
-            <button type="submit" className="search-button">Search</button>
+            <div className="search-buttons">
+                <button type="submit" className="search-button">Search</button>
+                <button type="button" className="reset-button" onClick={handleReset}>Reset</button>
+            </div>
         </form>
     );
 };
