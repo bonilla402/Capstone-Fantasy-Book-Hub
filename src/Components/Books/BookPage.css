@@ -64,10 +64,21 @@
 }
 
 /* Discussion Groups */
-.book-groups {
+.book-groups-cards {
+    background: #f9f6f2;
+    border: 2px solid #b5651d;
+    border-radius: 10px;
+    padding: 15px;
     margin-top: 20px;
-    font-size: 1rem;
-    color: #5c3b1e;
+    text-align: center;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Book Groups Title */
+.book-groups-cards h3 {
+    font-size: 1.3rem;
+    color: #7a3b1e;
+    margin-bottom: 10px;
 }
 
 /* Back Button */
@@ -86,3 +97,34 @@
 .back-to-books:hover {
     background-color: #9b4d1e;
 }
+
+/* Group Buttons Container */
+.group-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+/* Individual Group Button */
+.group-btn {
+    background: none;
+    color: #7a3b1e;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    border: 2px solid #b5651d;
+    border-radius: 8px;
+    padding: 5px 15px;
+    display: inline-block;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Hover Effect */
+.group-btn:hover {
+    transform: scale(1.05);
+}
+

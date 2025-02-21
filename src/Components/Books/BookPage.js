@@ -44,10 +44,16 @@ const BookPage = () => {
                 <p className="book-synopsis">{book.synopsis || "No synopsis available."}</p>
             </div>
 
-            <div className="book-groups">
+            <div className="book-groups-cards">
                 <h3>Groups Discussing This Book</h3>
-                {book.group_count > 0 ? (
-                    <p>{book.group_count} discussion groups are currently talking about this book.</p>
+                {book.groups && book.groups.length > 0 ? (
+                    <div className="group-buttons">
+                        {book.groups.map(group => (
+                            <Link key={group.id} to={`/groups/${group.id}`} className="group-btn">
+                                {group.group_name}
+                            </Link>
+                        ))}
+                    </div>
                 ) : (
                     <p>No groups discussing this book yet.</p>
                 )}
