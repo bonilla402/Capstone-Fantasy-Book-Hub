@@ -33,7 +33,7 @@ const DiscussionPage = () => {
 
     return (
         <div className="discussion-page">
-            <div className="form-container">
+            <div className="form-container discussion-container">
                 <div className="discussion-header">
                     {/* Book Cover */}
                     {discussion.book?.cover_image && (

@@ -135,3 +135,12 @@
     padding-top: 20px;
     border-top: 2px solid #9b4d1e; /* Visual separation */
 }
+
+/* Discussions Title */
+.group-discussions-tittle {
+    font-size: 1.5rem;
+    color: #7a3b1e;
+    margin: 0 0 25px 0;
+    padding: 0;
+    text-align: center;
+}

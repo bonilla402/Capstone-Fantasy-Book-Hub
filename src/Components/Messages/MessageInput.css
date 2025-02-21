@@ -37,3 +37,7 @@
 .message-input-container button:hover {
     background-color: #9b4d1e;
 }
+
+.add-discuss-message-btn{
+    width: 18%;
+}

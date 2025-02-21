@@ -60,7 +60,7 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
         setSuccess(false);
 
         if (!title || !content || !bookId || !groupId) {
-            setError("Title, content, book selection, and group ID are required.");
+            setError("Please select a book.");
             return;
         }
 

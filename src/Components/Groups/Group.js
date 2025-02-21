@@ -107,10 +107,10 @@ const Group = () => {
                     <GroupMembersList groupId={id} refreshTrigger={refreshTrigger} />
                 </div>
             </div>
-            
-            {isMember && (
+
+            {isMember && group.discussion_count > 0 && (
                 <div className="group-discussions-section">
-                    <h3>Group Discussions</h3>
+                    <h3 className="group-discussions-tittle">Group Discussions</h3>
                     <DiscussionList groupId={id} />
                 </div>
             )}

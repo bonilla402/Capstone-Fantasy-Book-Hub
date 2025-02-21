@@ -35,7 +35,7 @@ const MessageInput = ({ discussionId, onMessageAdded }) => {
                     placeholder="Type your message..."
                     required
                 />
-                <button type="submit">Send</button>
+                <button className="add-discuss-message-btn" type="submit">Send</button>
             </form>
         </div>
     );
