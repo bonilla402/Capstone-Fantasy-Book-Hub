@@ -1,7 +1,7 @@
 ﻿import React, { useState } from "react";
 import "./SearchBar.css";
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = ({ onSearch, hideGroupFilters = false }) => {
     const [filters, setFilters] = useState({
         author: "",
         title: "",
@@ -11,7 +11,7 @@ const SearchBar = ({ onSearch }) => {
     });
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFilters(prevFilters => ({
             ...prevFilters,
             [name]: value
@@ -28,11 +28,20 @@ const SearchBar = ({ onSearch }) => {
     return (
         <form onSubmit={handleSubmit} className="search-form">
             <div className="search-fields">
-                <input type="text" name="author" placeholder="Author" value={filters.author} onChange={handleChange} className="search-input" />
-                <input type="text" name="title" placeholder="Book Title" value={filters.title} onChange={handleChange} className="search-input" />
-                <input type="text" name="topic" placeholder="Book Topic" value={filters.topic} onChange={handleChange} className="search-input" />
-                <input type="text" name="groupTitle" placeholder="Group Title" value={filters.groupTitle} onChange={handleChange} className="search-input" />
-                <input type="text" name="groupDescription" placeholder="Group Description" value={filters.groupDescription} onChange={handleChange} className="search-input" />
+                <input type="text" name="author" placeholder="Author" value={filters.author} onChange={handleChange}
+                       className="search-input"/>
+                <input type="text" name="title" placeholder="Book Title" value={filters.title} onChange={handleChange}
+                       className="search-input"/>
+                <input type="text" name="topic" placeholder="Book Topic" value={filters.topic} onChange={handleChange}
+                       className="search-input"/>
+                {!hideGroupFilters && (
+                    <>
+                        <input type="text" name="groupTitle" placeholder="Group Title" value={filters.groupTitle}
+                               onChange={handleChange} className="search-input"/>
+                        <input type="text" name="groupDescription" placeholder="Group Description"
+                               value={filters.groupDescription} onChange={handleChange} className="search-input"/>
+                    </>
+                )}
             </div>
             <button type="submit" className="search-button">Search</button>
         </form>

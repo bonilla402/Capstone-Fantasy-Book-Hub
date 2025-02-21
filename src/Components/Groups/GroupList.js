@@ -29,8 +29,7 @@ const GroupList = () => {
 
     return (
         <div className="group-list-container">
-            <SearchBar onSearch={fetchGroups} placeholder="Search groups..." />
-
+            <SearchBar onSearch={fetchGroups} hideGroupFilters={false} />
             {loading && <p className="group-list-message">Loading groups...</p>}
             {error && <p className="group-list-message error">{error}</p>}
             {groups.length === 0 && !loading && <p className="group-list-message">No groups found.</p>}
