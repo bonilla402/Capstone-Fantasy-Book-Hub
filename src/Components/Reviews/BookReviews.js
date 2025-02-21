@@ -1,14 +1,14 @@
 ﻿import React, { useEffect, useState } from "react";
-import { useUser } from "../../UserContext"; // 🔹 Use context
+import { useUser } from "../../UserContext";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import BookReview from "./BookReview";
+import ReviewForm from "./ReviewForm";
 import "./BookReviews.css";
 
 const BookReviews = ({ bookId }) => {
-    const { user } = useUser(); // 🔹 Get user from context
+    const { user } = useUser();
     const [reviews, setReviews] = useState([]);
     const [userReview, setUserReview] = useState(null);
-    const [formData, setFormData] = useState({ rating: 5, reviewText: "" });
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -16,15 +16,11 @@ const BookReviews = ({ bookId }) => {
             try {
                 const reviewData = await FantasyBookHubApi.getReviews(bookId);
                 const reviewsArray = Array.isArray(reviewData) ? reviewData : [];
-
                 setReviews(reviewsArray);
 
                 if (user) {
                     const existingReview = reviewsArray.find(r => r.user_id === user.id);
-                    if (existingReview) {
-                        setUserReview(existingReview);
-                        setFormData({ rating: existingReview.rating, reviewText: existingReview.review_text });
-                    }
+                    setUserReview(existingReview || null);
                 }
             } catch (err) {
                 console.error("Error fetching reviews:", err);
@@ -34,20 +30,15 @@ const BookReviews = ({ bookId }) => {
         fetchReviews();
     }, [bookId, user]);
 
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (formData) => {
         try {
             if (userReview) {
                 await FantasyBookHubApi.updateReview(userReview.id, formData.rating, formData.reviewText);
-                setReviews(prevReviews => prevReviews.map(r =>
-                    r.id === userReview.id ? { ...r, rating: formData.rating, review_text: formData.reviewText } : r
-                ));
+                setReviews(prevReviews =>
+                    prevReviews.map(r =>
+                        r.id === userReview.id ? { ...r, rating: formData.rating, review_text: formData.reviewText } : r
+                    )
+                );
             } else {
                 const newReview = await FantasyBookHubApi.addReview(bookId, formData.rating, formData.reviewText);
                 setReviews(prevReviews => [newReview, ...prevReviews]);
@@ -62,9 +53,9 @@ const BookReviews = ({ bookId }) => {
         try {
             await FantasyBookHubApi.deleteReview(reviewId);
             setReviews(prevReviews => prevReviews.filter(r => r.id !== reviewId));
+
             if (userReview && userReview.id === reviewId) {
                 setUserReview(null);
-                setFormData({ rating: 5, reviewText: "" });
             }
         } catch (err) {
             setError("Error deleting review.");
@@ -72,35 +63,20 @@ const BookReviews = ({ bookId }) => {
     };
 
     return (
-        <div className="book-reviews">
-            <h3>Reviews</h3>
+        <>
+            {user && <ReviewForm userReview={userReview} onSubmit={handleSubmit} onDelete={handleDelete} />}
 
-            {/* 🔹 Review Form at the Top */}
-            {user && (
-                <>
-                    <h3>{userReview ? "Edit Your Review" : "Leave a Review"}</h3>
-                    {error && <p className="error">{error}</p>}
-                    <form onSubmit={handleSubmit}>
-                        <label>Rating (1-5):</label>
-                        <input type="number" name="rating" min="1" max="5" value={formData.rating} onChange={handleChange} required />
-
-                        <label>Review:</label>
-                        <textarea name="reviewText" value={formData.reviewText} onChange={handleChange} required />
-
-                        <button type="submit">{userReview ? "Update Review" : "Submit Review"}</button>
-                    </form>
-                </>
-            )}
-
-            {/* 🔹 List of Reviews */}
-            {reviews.length === 0 ? (
-                <p>No reviews yet. Be the first to review!</p>
-            ) : (
-                reviews.map(review => (
-                    <BookReview key={review.id} review={review} onDelete={handleDelete} />
-                ))
-            )}
-        </div>
+            <div className="book-reviews">
+                <h3>Reviews</h3>
+                {reviews.length === 0 ? (
+                    <p>No reviews yet. Be the first to review!</p>
+                ) : (
+                    reviews.map(review => (
+                        <BookReview key={review.id} review={review} onDelete={handleDelete} />
+                    ))
+                )}
+            </div>
+        </>
     );
 };
 

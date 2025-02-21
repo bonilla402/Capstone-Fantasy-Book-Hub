@@ -1,0 +1,78 @@
+﻿.review-form {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    border: 2px solid #b5651d;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* Form Title */
+.review-form h3 {
+    font-size: 1.5rem;
+    color: #7a3b1e;
+    margin-bottom: 10px;
+}
+
+/* Labels */
+.review-form label {
+    font-weight: bold;
+    color: #7a3b1e;
+}
+
+/* Input Fields */
+.review-form input,
+.review-form textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+/* Fixes Inputs from Overflowing */
+.review-form input {
+    height: 40px;
+}
+
+/* Buttons */
+.review-form button {
+    width: 100%;
+    max-width: 100%;
+    background-color: #c46728;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    margin-top: 10px;
+}
+
+.review-form button:hover {
+    background-color: #9b4d1e;
+}
+
+/* Delete Button */
+.delete-review-btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    margin-top: 10px;
+}
+
+.delete-review-btn:hover {
+    background-color: #b52b27;
+}

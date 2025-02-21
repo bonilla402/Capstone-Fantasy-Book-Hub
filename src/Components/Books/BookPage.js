@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
-import BookReviews from "../Reviews/BookReviews";
+import BookReviews from "../Reviews/BookReviews"; // 🔹 Keep BookReviews
 import "./BookPage.css";
 
 const BookPage = () => {
@@ -63,6 +63,8 @@ const BookPage = () => {
 
                 <Link to="/books" className="back-to-books">Back to Books</Link>
             </div>
+
+            {/* 🔹 BookReviews (Now Includes Separate Form) */}
             <BookReviews bookId={id} />
         </>
     );
