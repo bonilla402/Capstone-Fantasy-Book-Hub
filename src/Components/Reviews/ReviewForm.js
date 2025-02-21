@@ -7,6 +7,8 @@ const ReviewForm = ({ userReview, onSubmit, onDelete }) => {
     useEffect(() => {
         if (userReview) {
             setFormData({ rating: userReview.rating, reviewText: userReview.review_text });
+        } else {
+            setFormData({ rating: 5, reviewText: "" });
         }
     }, [userReview]);
 
@@ -18,6 +20,11 @@ const ReviewForm = ({ userReview, onSubmit, onDelete }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit(formData);
+    };
+
+    const handleDelete = () => {
+        onDelete(userReview.id);
+        setFormData({ rating: 5, reviewText: "" });
     };
 
     return (
@@ -46,7 +53,7 @@ const ReviewForm = ({ userReview, onSubmit, onDelete }) => {
                 <button type="submit">{userReview ? "Update Review" : "Submit Review"}</button>
 
                 {userReview && (
-                    <button type="button" className="delete-review-btn" onClick={() => onDelete(userReview.id)}>
+                    <button type="button" className="delete-review-btn" onClick={handleDelete}>
                         Delete Review
                     </button>
                 )}
