@@ -1,0 +1,34 @@
+﻿.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* ✅ Centers pagination layout */
+    gap: 12px; /* ✅ Adjusts spacing between elements */
+    margin-top: 20px;
+    font-family: "Georgia", serif;
+}
+
+.pagination-btn {
+    background-color: #d48236;
+    color: white;
+    border: none;
+    padding: 6px 12px; /* ✅ Reduce button size */
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    min-width: 90px; /* ✅ Ensures uniform button width */
+    text-align: center;
+}
+
+.pagination-btn:hover {
+    background-color: #a45c1e;
+}
+
+.pagination-info {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #7a3b1e;
+    min-width: 100px; /* ✅ Prevents shifting */
+    text-align: center;
+}

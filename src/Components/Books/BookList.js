@@ -3,6 +3,7 @@ import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import BookCard from "./BookCard";
 import SearchBar from "../SearchBar/SearchBar";
 import "./BookList.css";
+import Pagination from "./Pagination";
 
 const BookList = () => {
     const [books, setBooks] = useState([]);
@@ -40,22 +41,7 @@ const BookList = () => {
     return (
         <div className="book-list-container">
             <SearchBar onSearch={handleSearch} hideGroupFilters={true} />
-            
-            {totalPages > 1 && (
-                <div className="pagination">
-                    {page > 1 && (
-                        <button onClick={() => setPage(page - 1)} className="pagination-btn">
-                            Previous
-                        </button>
-                    )}
-                    <span>Page {page} of {totalPages}</span>
-                    {page < totalPages && (
-                        <button onClick={() => setPage(page + 1)} className="pagination-btn">
-                            Next
-                        </button>
-                    )}
-                </div>
-            )}
+            <Pagination currentPage={page} totalPages={totalPages} setPage={setPage} />
 
             <div className="book-list">
                 {books.length === 0 ? (
@@ -64,22 +50,8 @@ const BookList = () => {
                     books.map((book) => <BookCard key={book.id} book={book} />)
                 )}
             </div>
-            
-            {totalPages > 1 && (
-                <div className="pagination">
-                    {page > 1 && (
-                        <button onClick={() => setPage(page - 1)} className="pagination-btn">
-                            Previous
-                        </button>
-                    )}
-                    <span>Page {page} of {totalPages}</span>
-                    {page < totalPages && (
-                        <button onClick={() => setPage(page + 1)} className="pagination-btn">
-                            Next
-                        </button>
-                    )}
-                </div>
-            )}
+
+            <Pagination currentPage={page} totalPages={totalPages} setPage={setPage} />
         </div>
     );
 };
