@@ -10,7 +10,7 @@ const BookList = () => {
     const [totalBooks, setTotalBooks] = useState(0);
     const booksPerPage = 20;
     const [filters, setFilters] = useState({ author: "", title: "", topic: "" });
-    
+
     useEffect(() => {
         async function fetchBooks() {
             try {
@@ -31,7 +31,7 @@ const BookList = () => {
     }, [page, filters]);
 
     const totalPages = Math.ceil(totalBooks / booksPerPage);
-    
+
     const handleSearch = (searchFilters) => {
         setFilters(searchFilters);
         setPage(1);
@@ -40,16 +40,22 @@ const BookList = () => {
     return (
         <div className="book-list-container">
             <SearchBar onSearch={handleSearch} hideGroupFilters={true} />
-
-            <div className="pagination">
-                <button onClick={() => setPage(page - 1)} disabled={page === 1} className="pagination-btn">
-                    Previous
-                </button>
-                <span>Page {page} of {totalPages}</span>
-                <button onClick={() => setPage(page + 1)} disabled={page >= totalPages} className="pagination-btn">
-                    Next
-                </button>
-            </div>
+            
+            {totalPages > 1 && (
+                <div className="pagination">
+                    {page > 1 && (
+                        <button onClick={() => setPage(page - 1)} className="pagination-btn">
+                            Previous
+                        </button>
+                    )}
+                    <span>Page {page} of {totalPages}</span>
+                    {page < totalPages && (
+                        <button onClick={() => setPage(page + 1)} className="pagination-btn">
+                            Next
+                        </button>
+                    )}
+                </div>
+            )}
 
             <div className="book-list">
                 {books.length === 0 ? (
@@ -58,16 +64,22 @@ const BookList = () => {
                     books.map((book) => <BookCard key={book.id} book={book} />)
                 )}
             </div>
-
-            <div className="pagination">
-                <button onClick={() => setPage(page - 1)} disabled={page === 1} className="pagination-btn">
-                    Previous
-                </button>
-                <span>Page {page} of {totalPages}</span>
-                <button onClick={() => setPage(page + 1)} disabled={page >= totalPages} className="pagination-btn">
-                    Next
-                </button>
-            </div>
+            
+            {totalPages > 1 && (
+                <div className="pagination">
+                    {page > 1 && (
+                        <button onClick={() => setPage(page - 1)} className="pagination-btn">
+                            Previous
+                        </button>
+                    )}
+                    <span>Page {page} of {totalPages}</span>
+                    {page < totalPages && (
+                        <button onClick={() => setPage(page + 1)} className="pagination-btn">
+                            Next
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
