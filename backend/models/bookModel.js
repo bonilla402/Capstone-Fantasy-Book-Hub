@@ -90,24 +90,29 @@ class Book {
      *   }
      * ]
      */
-    static async searchBooks({ title, author, topic }) {
+    static async searchBooks({ title, author, topic, page = 1, limit = 20 }) {
+
+        if (!title && !author && !topic) {
+            return await Book.getAllBooks(page, limit);
+        }
+
         let query = `
-            SELECT
-                b.id,
-                b.title,
-                b.cover_image,
-                b.year_published,
-                b.synopsis,
-                b.created_at,
-                COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.name IS NOT NULL), '[]') AS authors,
-                COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.name IS NOT NULL), '[]') AS topics
-            FROM books b
-                     LEFT JOIN book_authors ba ON b.id = ba.book_id
-                     LEFT JOIN authors a ON ba.author_id = a.id
-                     LEFT JOIN book_topics bt ON b.id = bt.book_id
-                     LEFT JOIN topics t ON bt.topic_id = t.id
-            WHERE 1=1
-        `;
+        SELECT
+            b.id,
+            b.title,
+            b.cover_image,
+            b.year_published,
+            b.synopsis,
+            b.created_at,
+            COALESCE(json_agg(DISTINCT a.name) FILTER (WHERE a.id IS NOT NULL), '[]') AS authors,
+            COALESCE(json_agg(DISTINCT t.name) FILTER (WHERE t.id IS NOT NULL), '[]') AS topics
+        FROM books b
+        LEFT JOIN book_authors ba ON b.id = ba.book_id
+        LEFT JOIN authors a ON ba.author_id = a.id
+        LEFT JOIN book_topics bt ON b.id = bt.book_id
+        LEFT JOIN topics t ON bt.topic_id = t.id
+        WHERE 1=1
+    `;
 
         const params = [];
         let paramIndex = 1;
@@ -127,14 +132,17 @@ class Book {
             params.push(`%${topic}%`);
             paramIndex++;
         }
-
+        
         query += `
-            GROUP BY b.id
-            ORDER BY b.title ASC
-        `;
+        GROUP BY b.id
+        ORDER BY b.title ASC
+        LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
+    `;
+
+        params.push(limit, (page - 1) * limit);
 
         const result = await db.query(query, params);
-        return result.rows;
+        return { books: result.rows, totalBooks: result.rows.length };
     }
 
     static async searchBooksByQuery(query, limit = 10) {

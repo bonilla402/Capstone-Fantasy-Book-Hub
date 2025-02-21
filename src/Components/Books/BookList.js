@@ -1,18 +1,26 @@
 ﻿import React, { useState, useEffect } from "react";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import BookCard from "./BookCard";
+import SearchBar from "../SearchBar/SearchBar";
 import "./BookList.css";
 
 const BookList = () => {
     const [books, setBooks] = useState([]);
     const [page, setPage] = useState(1);
     const [totalBooks, setTotalBooks] = useState(0);
-    const booksPerPage = 10;
-
+    const booksPerPage = 20;
+    const [filters, setFilters] = useState({ author: "", title: "", topic: "" });
+    
     useEffect(() => {
         async function fetchBooks() {
             try {
-                const data = await FantasyBookHubApi.getAllBooks(page, booksPerPage);
+                const data = await FantasyBookHubApi.searchBooks({
+                    title: filters.title,
+                    author: filters.author,
+                    topic: filters.topic,
+                    page,
+                    limit: booksPerPage
+                });
                 setBooks(data.books);
                 setTotalBooks(data.totalBooks);
             } catch (err) {
@@ -20,27 +28,25 @@ const BookList = () => {
             }
         }
         fetchBooks();
-    }, [page]);
+    }, [page, filters]);
 
     const totalPages = Math.ceil(totalBooks / booksPerPage);
+    
+    const handleSearch = (searchFilters) => {
+        setFilters(searchFilters);
+        setPage(1);
+    };
 
     return (
         <div className="book-list-container">
-            
+            <SearchBar onSearch={handleSearch} />
+
             <div className="pagination">
-                <button
-                    onClick={() => setPage(page - 1)}
-                    disabled={page === 1}
-                    className="pagination-btn"
-                >
+                <button onClick={() => setPage(page - 1)} disabled={page === 1} className="pagination-btn">
                     Previous
                 </button>
                 <span>Page {page} of {totalPages}</span>
-                <button
-                    onClick={() => setPage(page + 1)}
-                    disabled={page >= totalPages}
-                    className="pagination-btn"
-                >
+                <button onClick={() => setPage(page + 1)} disabled={page >= totalPages} className="pagination-btn">
                     Next
                 </button>
             </div>
@@ -53,21 +59,12 @@ const BookList = () => {
                 )}
             </div>
 
-
             <div className="pagination">
-                <button
-                    onClick={() => setPage(page - 1)}
-                    disabled={page === 1}
-                    className="pagination-btn"
-                >
+                <button onClick={() => setPage(page - 1)} disabled={page === 1} className="pagination-btn">
                     Previous
                 </button>
                 <span>Page {page} of {totalPages}</span>
-                <button
-                    onClick={() => setPage(page + 1)}
-                    disabled={page >= totalPages}
-                    className="pagination-btn"
-                >
+                <button onClick={() => setPage(page + 1)} disabled={page >= totalPages} className="pagination-btn">
                     Next
                 </button>
             </div>

@@ -66,14 +66,11 @@ router.get("/", async (req, res, next) => {
  */
 router.get('/search', ensureLoggedIn, async (req, res, next) => {
     try {
-        const { title, author, topic } = req.query;
-        if (!title && !author && !topic) {
-            throw new BadRequestError("At least one search parameter (title, author, or topic) is required.");
-        }
+        const { title, author, topic, page = 1, limit = 20 } = req.query;
 
-        const books = await Book.searchBooks({ title, author, topic });
-        if (books.length === 0) throw new NotFoundError("No books found matching your search.");
-        res.json(books);
+        const books = await Book.searchBooks({ title, author, topic, page, limit });
+
+        res.json({ books: books.books, totalBooks: books.totalBooks });
     } catch (err) {
         return next(err);
     }

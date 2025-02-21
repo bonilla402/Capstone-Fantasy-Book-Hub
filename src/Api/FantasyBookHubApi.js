@@ -9,11 +9,11 @@ class FantasyBookHubApi {
 
         const url = `${BASE_URL}/${endpoint}`;
         const token = localStorage.getItem("token"); // Fetch fresh token each time
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const headers = token ? {Authorization: `Bearer ${token}`} : {};
         const params = method === "get" ? data : {};
 
         try {
-            const response = await axios({ url, method, data: method !== "get" ? data : undefined, params, headers });
+            const response = await axios({url, method, data: method !== "get" ? data : undefined, params, headers});
             return response.data;
         } catch (err) {
             console.error("API Error:", err.response);
@@ -28,7 +28,7 @@ class FantasyBookHubApi {
     }
 
     static async register(username, email, password) {
-        const res = await this.request("auth/register", { username, email, password }, "post");
+        const res = await this.request("auth/register", {username, email, password}, "post");
         this.token = res.token;
         localStorage.setItem("token", this.token);
         return res; // ✅ Now returns { token, user }
@@ -73,7 +73,7 @@ class FantasyBookHubApi {
             throw error;
         }
     }
-    
+
     static async getGroupMembers(groupId) {
         return await this.request(`groups/${groupId}/members`);
     }
@@ -89,7 +89,7 @@ class FantasyBookHubApi {
     static async isUserMember(groupId) {
         return await this.request(`groups/${groupId}/is-member`);
     }
-    
+
     // === Discussion Routes ===
 
     static async getDiscussions(groupId) {
@@ -110,7 +110,7 @@ class FantasyBookHubApi {
     }
 
     static async addMessage(discussionId, content) {
-        return await this.request(`messages/${discussionId}`, { content }, "post");
+        return await this.request(`messages/${discussionId}`, {content}, "post");
     }
 
 
@@ -125,13 +125,18 @@ class FantasyBookHubApi {
 
     static async searchBooksDynamic(query) {
         try {
-            const response = await axios.get(`${BASE_URL}/books/search/dynamic`, { params: { query } });
+            const response = await axios.get(`${BASE_URL}/books/search/dynamic`, {params: {query}});
             return response.data;
         } catch (error) {
             console.error("Error fetching books:", error);
             return [];
         }
     }
+
+    static async searchBooks(filters = {}) {
+        return await this.request("books/search", filters, "get");
+    }
+
 }
 
 export default FantasyBookHubApi;
