@@ -5,6 +5,20 @@ const { BadRequestError, NotFoundError } = require('../helpers/expressError');
 const Book = require('../models/bookModel');
 
 /**
+ * books.js
+ *
+ * Provides routes under the /books endpoint for managing and retrieving book data.
+ * This includes:
+ *  - Listing and searching books
+ *  - Viewing book details
+ *  - Creating and deleting books (admin-only)
+ *
+ * Authorization Notes:
+ *  - Most routes require the user to be logged in.
+ *  - Certain routes (like creation/deletion) require admin privileges.
+ */
+
+/**
  * GET /books
  * Retrieves all books with their authors and topics.
  *
@@ -76,6 +90,28 @@ router.get('/search', ensureLoggedIn, async (req, res, next) => {
     }
 });
 
+/**
+ * GET /books/search/dynamic
+ * Dynamically searches books by a query string (title or author),
+ * expecting at least 3 characters before returning results.
+ *
+ * Authorization required: None (public endpoint).
+ *
+ * @returns {Object[]} 200 - List of matching books.
+ * @example Request:
+ * GET /books/search/dynamic?query=ring
+ *
+ * @example Response:
+ * [
+ *   {
+ *     "id": 3,
+ *     "title": "The Lord of the Rings",
+ *     "cover_image": "https://example.com/lotr.jpg",
+ *     "year_published": 1954,
+ *     "authors": ["J.R.R. Tolkien"]
+ *   }
+ * ]
+ */
 router.get("/search/dynamic", async (req, res) => {
     try {
         const { query } = req.query;

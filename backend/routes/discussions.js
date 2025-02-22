@@ -6,6 +6,21 @@ const Group = require('../models/groupModel');
 const Discussion = require('../models/discussionModel');
 
 /**
+ * discussions.js
+ *
+ * Provides routes under the /discussion endpoint for managing discussion threads.
+ * This includes:
+ *  - Retrieving discussions within a group
+ *  - Creating new discussions
+ *  - Updating and deleting existing discussions
+ *  - Viewing a single discussion by ID
+ *
+ * Authorization Notes:
+ *  - Most routes require the user to be logged in.
+ *  - Checking membership or ownership is handled within the route logic.
+ */
+
+/**
  * GET /discussion/:groupId
  * Retrieves all discussions within a group.
  *
@@ -36,7 +51,7 @@ router.get('/:groupId', ensureLoggedIn, async (req, res, next) => {
         const isMember = await Group.isUserInGroup(groupId, userId);
         const isGroupCreator = await Group.isGroupCreator(groupId, userId);
 
-        if (!isMember && !isGroupCreator) {
+        if (!isMember && !isGroupCreator && !isAdmin) {
             throw new UnauthorizedError("You must be a group member or an admin to view discussions.");
         }
 
@@ -51,7 +66,12 @@ router.get('/:groupId', ensureLoggedIn, async (req, res, next) => {
  * POST /discussion/:groupId
  * Creates a new discussion in a group.
  *
- * Authorization required: Any logged-in group member.
+ * Authorization required: Any logged-in group member or group creator.
+ *
+ * @param {number} groupId - The ID of the group in which to create the discussion.
+ * @body {number} bookId - The ID of the book being discussed.
+ * @body {string} title - The title of the new discussion.
+ * @body {string} content - The main text content of the discussion.
  */
 router.post('/:groupId', ensureLoggedIn, async (req, res, next) => {
     try {
@@ -79,9 +99,13 @@ router.post('/:groupId', ensureLoggedIn, async (req, res, next) => {
 
 /**
  * PATCH /discussion/:id
- * Updates a discussion title or content.
+ * Updates a discussion's title or content.
  *
- * Authorization required: Discussion creator or group creator.
+ * Authorization required: Discussion creator, group creator, or admin.
+ *
+ * @param {number} id - The discussion's ID.
+ * @body {string} [title] - Optional updated discussion title.
+ * @body {string} [content] - Optional updated discussion content.
  */
 router.patch('/:id', ensureLoggedIn, async (req, res, next) => {
     try {
@@ -112,9 +136,16 @@ router.patch('/:id', ensureLoggedIn, async (req, res, next) => {
 
 /**
  * DELETE /discussion/:id
- * Deletes a discussion.
+ * Deletes a discussion by its ID.
  *
  * Authorization required: Discussion creator, group creator, or admin.
+ *
+ * @param {number} id - The discussion's ID.
+ * @returns {Object} 200 - A confirmation message.
+ * @example Response:
+ * {
+ *   "message": "Discussion deleted."
+ * }
  */
 router.delete('/:id', ensureLoggedIn, async (req, res, next) => {
     try {
@@ -137,10 +168,13 @@ router.delete('/:id', ensureLoggedIn, async (req, res, next) => {
 });
 
 /**
- * GET /discussions/:discussionId
+ * GET /discussions/detail/:discussionId
  * Retrieves a single discussion by ID.
  *
- * Authorization required: Must be a member of the group.
+ * Authorization required: Must be a member of the group or group creator/admin.
+ *
+ * @param {number} discussionId - The discussion's ID.
+ * @returns {Object} 200 - The discussion details.
  */
 router.get('/detail/:discussionId', ensureLoggedIn, async (req, res, next) => {
     try {
@@ -165,6 +199,5 @@ router.get('/detail/:discussionId', ensureLoggedIn, async (req, res, next) => {
         return next(err);
     }
 });
-
 
 module.exports = router;

@@ -5,6 +5,16 @@ const { UnauthorizedError, BadRequestError } = require('../helpers/expressError'
 const Review = require('../models/reviewModel');
 
 /**
+ * reviews.js
+ *
+ * Provides routes under the /reviews endpoint for reading, creating,
+ * updating, and deleting book reviews.
+ *
+ * All routes require the user to be logged in, except for additional
+ * logic to ensure only admins or review owners can modify/delete reviews.
+ */
+
+/**
  * GET /reviews
  * Retrieves all reviews with user and book details.
  *

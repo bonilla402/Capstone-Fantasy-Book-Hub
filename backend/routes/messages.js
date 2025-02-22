@@ -7,6 +7,14 @@ const Discussion = require('../models/discussionModel');
 const Group = require('../models/groupModel'); // Needed for membership checks
 
 /**
+ * messages.js
+ *
+ * Provides routes under the /messages endpoint for creating and retrieving
+ * messages within a discussion. Users must typically belong to the relevant group
+ * or be an admin to view or post messages.
+ */
+
+/**
  * GET /messages/:discussionId
  * Retrieves all messages in a discussion.
  *

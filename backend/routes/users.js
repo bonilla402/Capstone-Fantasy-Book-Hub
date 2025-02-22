@@ -5,6 +5,19 @@ const { ensureLoggedIn, ensureCorrectUserOrAdmin, ensureAdmin } = require('../mi
 const { BadRequestError, NotFoundError } = require('../helpers/expressError');
 
 /**
+ * users.js
+ *
+ * This file provides routes under the /users endpoint for managing user accounts.
+ * - Listing all users (admin-only)
+ * - Updating user data
+ * - Deleting users
+ *
+ * Authorization logic:
+ *  - Only admins can list or delete users.
+ *  - An admin or the user themselves can update user information.
+ */
+
+/**
  * GET /users
  * Retrieves a list of all users (Admin only).
  *

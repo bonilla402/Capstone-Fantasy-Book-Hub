@@ -5,6 +5,16 @@ const { BadRequestError, NotFoundError } = require('../helpers/expressError');
 const Topic = require('../models/topicModel');
 
 /**
+ * topics.js
+ *
+ * This file provides endpoints for retrieving and searching topic data.
+ * Routes require the user to be logged in. Endpoints include:
+ *  - Listing all topics
+ *  - Retrieving detailed topics (with associated books and authors)
+ *  - Searching topics by name
+ */
+
+/**
  * GET /topics
  * Retrieves a list of all possible topics with their IDs.
  *

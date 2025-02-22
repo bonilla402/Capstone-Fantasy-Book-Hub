@@ -12,7 +12,25 @@ const groupsRoutes = require('./groups');
 const discussionsRoutes = require('./discussions');
 const messagesRoutes = require('./messages');
 
-// Use routes (without '/api', since it's handled in app.js)
+/**
+ * index.js (routes/index.js)
+ *
+ * This file serves as the central point for combining all sub-route modules:
+ *  - Auth
+ *  - Users
+ *  - Books
+ *  - Authors
+ *  - Topics
+ *  - Reviews
+ *  - Groups
+ *  - Discussions
+ *  - Messages
+ *
+ * The routes are mounted here and will be prefixed in `app.js` with /api.
+ * Example: `/api/books`, `/api/auth`, etc.
+ */
+
+// Use routes (the '/api' prefix is applied in app.js)
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/books', bookRoutes);

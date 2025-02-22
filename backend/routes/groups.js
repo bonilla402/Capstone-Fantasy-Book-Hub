@@ -5,6 +5,17 @@ const { UnauthorizedError, BadRequestError, NotFoundError } = require('../helper
 const Group = require('../models/groupModel');
 
 /**
+ * groups.js
+ *
+ * This file contains routes under the /groups endpoint for managing discussion groups,
+ * including group creation, updates, membership management, and searches.
+ *
+ * Authorization:
+ * - Most routes require the user to be logged in.
+ * - Some actions require the user to be the group creator or an admin.
+ */
+
+/**
  * GET /groups
  * Retrieves all discussion groups.
  *
@@ -33,14 +44,13 @@ router.get('/', ensureLoggedIn, async (req, res, next) => {
 router.get("/search", ensureLoggedIn, async (req, res, next) => {
     try {
         const { author, title, topic, groupTitle, groupDescription } = req.query;
-        
+
         const groups = await Group.searchGroups(author, title, topic, groupTitle, groupDescription);
         res.json(groups);
     } catch (err) {
         return next(err);
     }
 });
-
 
 /**
  * GET /groups/:id
@@ -217,6 +227,5 @@ router.get('/:id/is-member', ensureLoggedIn, async (req, res, next) => {
         return next(err);
     }
 });
-
 
 module.exports = router;

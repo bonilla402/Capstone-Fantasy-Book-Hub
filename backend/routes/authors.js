@@ -5,6 +5,18 @@ const { BadRequestError, NotFoundError } = require('../helpers/expressError');
 const Author = require('../models/authorModel');
 
 /**
+ * authors.js
+ *
+ * Provides routes under the /authors endpoint for retrieving and searching
+ * author data. Includes:
+ *  - Basic list of authors
+ *  - Detailed author info with books and topics
+ *  - Search functionality by author name
+ *
+ * Authorization required for all routes: Any logged-in user.
+ */
+
+/**
  * GET /authors
  * Retrieves a simple list of authors with their IDs.
  *

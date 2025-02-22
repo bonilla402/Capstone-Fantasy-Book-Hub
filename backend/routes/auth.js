@@ -8,6 +8,16 @@ const router = express.Router();
 const SECRET_KEY = process.env.SECRET_KEY || "secret_dev_key";
 
 /**
+ * auth.js
+ *
+ * Provides authentication routes under the /auth endpoint. This includes:
+ *  - Registering a new user
+ *  - Logging in an existing user
+ *
+ * These routes handle credential checks and generate JWT tokens for secure access.
+ */
+
+/**
  * POST /api/auth/register { username, email, password }
  * => { token, user }
  *
@@ -22,7 +32,11 @@ router.post("/register", async (req, res, next) => {
         if (!username || !email || !password) throw new BadRequestError("All fields are required.");
 
         const newUser = await User.createUser(username, email, password);
-        const token = jwt.sign({ userId: newUser.id, isAdmin: newUser.is_admin }, SECRET_KEY, { expiresIn: "24h" });
+        const token = jwt.sign(
+            { userId: newUser.id, isAdmin: newUser.is_admin },
+            SECRET_KEY,
+            { expiresIn: "24h" }
+        );
 
         // Remove sensitive data before returning user info
         delete newUser.password_hash;
@@ -36,6 +50,7 @@ router.post("/register", async (req, res, next) => {
 /**
  * POST /auth/login { email, password } => { token, user }
  * Authenticates a user and returns a JWT token + user details.
+ *
  * Authorization required: None
  */
 router.post("/login", async (req, res, next) => {
@@ -51,7 +66,11 @@ router.post("/login", async (req, res, next) => {
         if (!isValid) throw new UnauthorizedError("Invalid email/password.");
 
         // Generate JWT token
-        const token = jwt.sign({ userId: user.id, isAdmin: user.is_admin }, SECRET_KEY, { expiresIn: "24h" });
+        const token = jwt.sign(
+            { userId: user.id, isAdmin: user.is_admin },
+            SECRET_KEY,
+            { expiresIn: "24h" }
+        );
 
         // Remove sensitive data before sending response
         delete user.password_hash;
