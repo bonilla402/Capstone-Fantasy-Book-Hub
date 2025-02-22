@@ -1,13 +1,44 @@
 ﻿import React, { createContext, useReducer, useContext } from "react";
 import FantasyBookHubApi from "./Api/FantasyBookHubApi";
 
-// Create the context
+/**
+ * UserContext.js
+ *
+ * Provides a global user state for the Fantasy Book Hub client. This context
+ * handles login, logout, and user profile updates, while synchronizing
+ * credentials (token) with localStorage and the FantasyBookHubApi class.
+ *
+ * @file
+ */
+
+/**
+ * Creates a React context for global user state.
+ * @constant
+ */
 const UserContext = createContext();
 
-// Custom hook to consume UserContext
+/**
+ * Custom hook to consume the UserContext.
+ *
+ * @function useUser
+ * @returns {Object} An object with { user, dispatch } from the UserContext.
+ *
+ * @example
+ * const { user, dispatch } = useUser();
+ */
 export const useUser = () => useContext(UserContext);
 
-// Reducer function for user state management
+/**
+ * A reducer function that updates the user state based on action types.
+ *
+ * @function userReducer
+ * @param {Object|null} state - The current user state (null if no user).
+ * @param {Object} action - The action object containing { type, payload }.
+ * @returns {Object|null} The updated user state or null upon logout.
+ *
+ * @example
+ * dispatch({ type: "LOGIN", payload: { user, token } });
+ */
 const userReducer = (state, action) => {
     switch (action.type) {
         case "LOGIN":
@@ -32,7 +63,21 @@ const userReducer = (state, action) => {
     }
 };
 
-// UserProvider component to wrap the app
+/**
+ * The UserProvider component that wraps the application. It uses a reducer
+ * to store and manage user information in context.
+ *
+ * @component
+ * @param {Object} props - The component's props.
+ * @param {React.ReactNode} props.children - Child components that will have access to the user context.
+ * @returns {JSX.Element} The provider component that wraps its children.
+ *
+ * @example
+ * // In App.js:
+ * <UserProvider>
+ *   <App />
+ * </UserProvider>
+ */
 export const UserProvider = ({ children }) => {
     // Initialize state from localStorage
     const [user, dispatch] = useReducer(userReducer, null, () => {
