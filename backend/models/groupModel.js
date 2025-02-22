@@ -1,11 +1,17 @@
 ﻿const db = require("../config/db");
 
+/**
+ * The Group class manages discussion groups, including their creation, retrieval,
+ * updates, membership, and related searches.
+ */
 class Group {
     /**
-     * Retrieves all discussion groups with member count.
+     * Retrieves all discussion groups, including their member count and discussion count.
      *
-     * @returns {Promise<Object[]>} List of all discussion groups.
-     * @example Response:
+     * @returns {Promise<Object[]>} A promise that resolves to an array of discussion group objects,
+     * each containing fields such as id, group_name, description, created_by, created_by_username,
+     * created_at, member_count, and discussion_count.
+     * @example
      * [
      *   {
      *     "id": 1,
@@ -15,7 +21,7 @@ class Group {
      *     "created_by_username": "booklover",
      *     "created_at": "2024-02-06T12:00:00.000Z",
      *     "member_count": 5,
-     *    "discussion_count": 5
+     *     "discussion_count": 5
      *   }
      * ]
      */
@@ -36,13 +42,13 @@ class Group {
         return result.rows;
     }
 
-
     /**
-     * Retrieves a single discussion group by ID, including member count.
+     * Retrieves a single discussion group by its ID, including its member count and discussion count.
      *
      * @param {number} groupId - The ID of the discussion group.
-     * @returns {Promise<Object|null>} The discussion group or null if not found.
-     * @example Response:
+     * @returns {Promise<Object|null>} A promise that resolves to the discussion group object if found,
+     * or null otherwise.
+     * @example
      * {
      *   "id": 1,
      *   "group_name": "Fantasy Readers",
@@ -72,15 +78,14 @@ class Group {
         return result.rows[0] || null;
     }
 
-
     /**
-     * Creates a new discussion group.
+     * Creates a new discussion group and automatically adds the creator as a member.
      *
      * @param {string} groupName - The name of the group.
-     * @param {string} description - The group's description.
-     * @param {number} createdBy - The ID of the user creating the group.
-     * @returns {Promise<Object>} The newly created discussion group.
-     * @example Response:
+     * @param {string} description - A brief description of the group's focus.
+     * @param {number} createdBy - The user ID of the group's creator.
+     * @returns {Promise<Object>} A promise that resolves to the newly created discussion group object.
+     * @example
      * {
      *   "id": 2,
      *   "group_name": "Sci-Fi Explorers",
@@ -99,22 +104,22 @@ class Group {
         const newGroup = result.rows[0];
 
         await db.query(`
-        INSERT INTO group_members (group_id, user_id)
-        VALUES ($1, $2)
-    `, [newGroup.id, createdBy]);
+            INSERT INTO group_members (group_id, user_id)
+            VALUES ($1, $2)
+        `, [newGroup.id, createdBy]);
 
         return newGroup;
-
     }
 
     /**
-     * Updates a discussion group.
+     * Updates an existing discussion group, allowing changes to its name and/or description.
      *
-     * @param {number} groupId - The ID of the discussion group.
-     * @param {string|null} groupName - The new group name (optional).
-     * @param {string|null} description - The new description (optional).
-     * @returns {Promise<Object|null>} The updated discussion group or null if not found.
-     * @example Response:
+     * @param {number} groupId - The ID of the discussion group to update.
+     * @param {string|null} groupName - The new group name, or null to leave it unchanged.
+     * @param {string|null} description - The new group description, or null to leave it unchanged.
+     * @returns {Promise<Object|null>} A promise that resolves to the updated discussion group object,
+     * or null if the group was not found.
+     * @example
      * {
      *   "id": 1,
      *   "group_name": "Updated Group Name",
@@ -136,11 +141,12 @@ class Group {
     }
 
     /**
-     * Checks if a user is the creator of a discussion group.
+     * Checks whether a user is the original creator of a discussion group.
      *
      * @param {number} groupId - The ID of the discussion group.
-     * @param {number} userId - The ID of the user.
-     * @returns {Promise<boolean>} True if the user created the group, false otherwise.
+     * @param {number} userId - The ID of the user to check.
+     * @returns {Promise<boolean>} A promise that resolves to true if the user created the group,
+     * otherwise false.
      */
     static async isGroupOwner(groupId, userId) {
         const result = await db.query(
@@ -152,26 +158,35 @@ class Group {
     }
 
     /**
-     * Deletes a discussion group.
+     * Deletes a discussion group by its ID.
      *
      * @param {number} groupId - The ID of the group to delete.
-     * @returns {Promise<boolean>} True if the deletion was successful.
+     * @returns {Promise<boolean>} A promise that resolves to true if the deletion
+     * was successful, or false otherwise.
      */
     static async deleteGroup(groupId) {
         const result = await db.query(`
-            DELETE FROM discussion_groups WHERE id = $1 RETURNING id
+            DELETE
+            FROM discussion_groups
+            WHERE id = $1
+            RETURNING id
         `, [groupId]);
 
         return result.rows.length > 0;
     }
 
-    
     /**
      * Adds a user to a discussion group.
      *
      * @param {number} groupId - The ID of the discussion group.
      * @param {number} userId - The ID of the user to add.
-     * @returns {Promise<Object>} Confirmation of the added user.
+     * @returns {Promise<Object>} A promise that resolves to an object containing
+     * the group_id and user_id of the newly added member.
+     * @example
+     * {
+     *   group_id: 1,
+     *   user_id: 5
+     * }
      */
     static async addUserToGroup(groupId, userId) {
         const result = await db.query(`
@@ -188,11 +203,14 @@ class Group {
      *
      * @param {number} groupId - The ID of the discussion group.
      * @param {number} userId - The ID of the user to remove.
-     * @returns {Promise<boolean>} True if the user was removed.
+     * @returns {Promise<boolean>} A promise that resolves to true if the user
+     * was successfully removed, or false otherwise.
      */
     static async removeUserFromGroup(groupId, userId) {
         const result = await db.query(`
-            DELETE FROM group_members WHERE group_id = $1 AND user_id = $2
+            DELETE
+            FROM group_members
+            WHERE group_id = $1 AND user_id = $2
             RETURNING group_id
         `, [groupId, userId]);
 
@@ -200,31 +218,41 @@ class Group {
     }
 
     /**
-     * Checks if a user is in a group.
+     * Checks if a user is already a member of a discussion group.
      *
      * @param {number} groupId - The ID of the discussion group.
-     * @param {number} userId - The ID of the user.
-     * @returns {Promise<boolean>} True if the user is in the group.
+     * @param {number} userId - The ID of the user to check.
+     * @returns {Promise<boolean>} A promise that resolves to true if the user is a member,
+     * otherwise false.
      */
     static async isUserInGroup(groupId, userId) {
         const result = await db.query(`
-            SELECT 1 FROM group_members WHERE group_id = $1 AND user_id = $2
+            SELECT 1
+            FROM group_members
+            WHERE group_id = $1
+              AND user_id = $2
         `, [groupId, userId]);
 
         return result.rows.length > 0;
     }
 
     /**
-     * Retrieves a list of members in a discussion group.
+     * Retrieves a list of members (including user IDs and usernames) in a discussion group.
      *
      * @param {number} groupId - The ID of the discussion group.
-     * @returns {Promise<Object[]>} List of group members.
+     * @returns {Promise<Object[]>} A promise that resolves to an array of objects,
+     * each containing user_id and username of a group member.
+     * @example
+     * [
+     *   { user_id: 3, username: "user3" },
+     *   { user_id: 5, username: "newbie" }
+     * ]
      */
     static async getGroupMembers(groupId) {
         const result = await db.query(`
             SELECT u.id AS user_id, u.username
             FROM group_members gm
-            JOIN users u ON gm.user_id = u.id
+                     JOIN users u ON gm.user_id = u.id
             WHERE gm.group_id = $1
         `, [groupId]);
 
@@ -232,33 +260,39 @@ class Group {
     }
 
     /**
-     * Checks if a user is the creator of a given group.
+     * Checks if a user is the creator of a given discussion group.
      *
-     * @param {number} groupId - The ID of the group.
-     * @param {number} userId - The ID of the user.
-     * @returns {Promise<boolean>} True if the user is the group creator, false otherwise.
-     * @example Response:
+     * @param {number} groupId - The ID of the group to check.
+     * @param {number} userId - The ID of the user to verify.
+     * @returns {Promise<boolean>} A promise that resolves to true if the user
+     * is the group creator, or false otherwise.
+     * @example
      * true
      */
     static async isGroupCreator(groupId, userId) {
         const result = await db.query(`
-            SELECT 1 FROM discussion_groups
-            WHERE id = $1 AND created_by = $2
+            SELECT 1
+            FROM discussion_groups
+            WHERE id = $1
+              AND created_by = $2
         `, [groupId, userId]);
 
         return result.rows.length > 0;
     }
 
     /**
-     * Searches for groups matching book details or group details using AND logic.
+     * Searches for groups that match the given parameters (author, title, topic,
+     * groupTitle, and groupDescription) using AND logic. All matches must meet
+     * each condition if provided.
      *
      * @param {string|null} author - The book author to search for.
      * @param {string|null} title - The book title to search for.
      * @param {string|null} topic - The book topic to search for.
      * @param {string|null} groupTitle - The group title to search for.
      * @param {string|null} groupDescription - The group description to search for.
-     * @returns {Promise<Object[]>} List of matching groups.
-     * @example Response:
+     * @returns {Promise<Object[]>} A promise that resolves to an array of matching groups,
+     * each including details such as id, group_name, description, created_at, created_by, and member_count.
+     * @example
      * [
      *   {
      *     "id": 1,
@@ -294,8 +328,7 @@ class Group {
             conditions.push(`g.description ILIKE $${values.length + 1}`);
             values.push(`%${groupDescription}%`);
         }
-
-        // Apply AND logic by joining conditions with AND instead of OR
+        
         const whereClause = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 
         console.log("Executing Query with Params:", values); // Debugging log
@@ -304,14 +337,14 @@ class Group {
             SELECT DISTINCT g.id, g.group_name, g.description, g.created_at, u.username AS created_by,
                             (SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = g.id) AS member_count
             FROM discussion_groups g
-                     LEFT JOIN group_discussions d ON g.id = d.group_id
-                     LEFT JOIN books b ON d.book_id = b.id
-                     LEFT JOIN book_authors ba ON ba.book_id = b.id
-                     LEFT JOIN authors a ON ba.author_id = a.id
-                     LEFT JOIN book_topics bt ON bt.book_id = b.id
-                     LEFT JOIN topics t ON bt.topic_id = t.id
-                     JOIN users u ON g.created_by = u.id
-                ${whereClause}
+            LEFT JOIN group_discussions d ON g.id = d.group_id
+            LEFT JOIN books b ON d.book_id = b.id
+            LEFT JOIN book_authors ba ON ba.book_id = b.id
+            LEFT JOIN authors a ON ba.author_id = a.id
+            LEFT JOIN book_topics bt ON bt.book_id = b.id
+            LEFT JOIN topics t ON bt.topic_id = t.id
+            JOIN users u ON g.created_by = u.id
+            ${whereClause}
             ORDER BY g.id ASC
         `, values);
 
