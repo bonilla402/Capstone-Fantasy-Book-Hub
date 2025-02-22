@@ -1,20 +1,20 @@
 ﻿require("dotenv").config({ path: ".env.test" });
-const db = require("../config/testDatabase");
+const db = require("../config/db");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
 let testUserId;
 
 beforeAll(async () => {
-    console.log("Seeding test data for users...");
+    console.log("Connecting to test database for user tests...");
 
+    console.log("Seeding test data for users...");
     await Promise.all([
         db.query("DELETE FROM discussion_groups"),
         db.query("DELETE FROM users")
     ]);
 
     const passwordHash = await bcrypt.hash("testpassword", 12);
-
     const userInsert = await db.query(`
         INSERT INTO users (username, email, password_hash, is_admin)
         VALUES ($1, $2, $3, $4) RETURNING id

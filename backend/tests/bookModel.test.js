@@ -1,12 +1,12 @@
 ﻿require("dotenv").config({ path: ".env.test" });
-const db = require("../config/testDatabase");
+const db = require("../config/db");
 const Book = require("../models/bookModel");
 
 let testBookId, testAuthorId, testTopicId;
 
 beforeAll(async () => {
-    console.log("Seeding test data for books...");
 
+    console.log("Seeding test data for books...");
     await Promise.all([
         db.query("DELETE FROM book_topics"),
         db.query("DELETE FROM book_authors"),
@@ -44,8 +44,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    console.log("Cleaning up test database...");
-
+    console.log("Cleaning up test database for book tests...");
     await Promise.all([
         db.query("DELETE FROM book_topics"),
         db.query("DELETE FROM book_authors"),
@@ -55,7 +54,7 @@ afterAll(async () => {
     ]);
 
     await db.end();
-    console.log("Database connection closed.");
+    console.log("Database connection closed for book tests.");
 });
 
 describe("Books Model", () => {

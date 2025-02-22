@@ -17,7 +17,7 @@
  */
 function getDatabaseUri() {
     const dbName = process.env.NODE_ENV === "test"
-        ? "fantasy_book_hub"
+        ? "fantasy_book_hub_test" 
         : process.env.DATABASE_NAME || "fantasy_book_hub";
 
     const dbHost = process.env.DATABASE_HOST || "localhost";
@@ -28,5 +28,6 @@ function getDatabaseUri() {
     return process.env.DATABASE_URL
         || `postgresql://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`;
 }
+
 
 module.exports = { getDatabaseUri };

@@ -2,9 +2,10 @@
 /**
  * Database setup for Fantasy Book Hub.
  *
- * Depending on the environment (production/test/other), this file creates
- * a new `Client` instance from `pg` with the appropriate connection string,
- * then establishes a connection.
+ * This file automatically connects to the correct database based on `NODE_ENV`:
+ * - `production`: Uses an SSL-secured connection.
+ * - `test`: Connects to the test database.
+ * - Otherwise, connects to the development database.
  */
 
 const { Client } = require("pg");
@@ -12,23 +13,16 @@ const { getDatabaseUri } = require("./config");
 
 let db;
 
-/**
- * If the `NODE_ENV` is set to "production", an SSL connection is used with
- * `rejectUnauthorized: false`. Otherwise, a standard non-SSL connection is used.
- */
-if (process.env.NODE_ENV === "production") {
-    db = new Client({
-        connectionString: getDatabaseUri(),
-        ssl: {
-            rejectUnauthorized: false,
-        },
-    });
-} else {
-    db = new Client({
-        connectionString: getDatabaseUri(),
-    });
-}
+// Ensure we only create one DB connection
+if (!db) {
+    console.log(`Connecting to database: ${getDatabaseUri()}`);
 
-db.connect();
+    db = new Client({
+        connectionString: getDatabaseUri(),
+        ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+    });
+
+    db.connect();
+}
 
 module.exports = db;
