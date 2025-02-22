@@ -2,14 +2,33 @@
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "./MessagesList.css";
 
+/**
+ * MessagesList
+ *
+ * A component that displays all messages for a given discussion. It also listens
+ * for changes in the refreshMessages prop to re-fetch messages when needed.
+ *
+ * @component
+ * @param {Object} props
+ * @param {number|string} props.discussionId - The ID of the discussion for which messages are displayed.
+ * @param {boolean|number} props.refreshMessages - A value that, when changed, triggers the list to refresh its data.
+ * @returns {JSX.Element} A container listing messages or showing loading/error states.
+ */
 const MessagesList = ({ discussionId, refreshMessages }) => {
     const [messages, setMessages] = useState([]);
     const [error, setError] = useState(null);
 
+    /**
+     * Fetches messages whenever discussionId or refreshMessages changes.
+     */
     useEffect(() => {
         fetchMessages();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [discussionId, refreshMessages]);
 
+    /**
+     * Loads messages from the back-end via the API for the specified discussion.
+     */
     const fetchMessages = async () => {
         try {
             const data = await FantasyBookHubApi.getMessages(discussionId);
@@ -19,6 +38,12 @@ const MessagesList = ({ discussionId, refreshMessages }) => {
         }
     };
 
+    /**
+     * Formats a timestamp into a user-friendly date/time string.
+     *
+     * @param {string} timestamp - The ISO timestamp to format.
+     * @returns {string} A formatted date string (e.g., "Feb 12, 2025, 3:45 PM").
+     */
     const formatDate = (timestamp) => {
         const date = new Date(timestamp);
         return date.toLocaleString("en-US", {
@@ -41,8 +66,12 @@ const MessagesList = ({ discussionId, refreshMessages }) => {
                     messages.map((msg) => (
                         <div key={msg.id} className="message">
                             <div className="message-header">
-                                <span><strong>{msg.username}</strong></span>
-                                <span className="message-date">{formatDate(msg.created_at)}</span>
+                                <span>
+                                    <strong>{msg.username}</strong>
+                                </span>
+                                <span className="message-date">
+                                    {formatDate(msg.created_at)}
+                                </span>
                             </div>
                             <p className="message-content">{msg.content}</p>
                         </div>
