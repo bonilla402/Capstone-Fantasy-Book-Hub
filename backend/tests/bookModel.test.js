@@ -7,11 +7,13 @@ let testBookId, testAuthorId, testTopicId;
 beforeAll(async () => {
     console.log("Seeding test data for books...");
 
-    await db.query("DELETE FROM book_topics");
-    await db.query("DELETE FROM book_authors");
-    await db.query("DELETE FROM books");
-    await db.query("DELETE FROM authors");
-    await db.query("DELETE FROM topics");
+    await Promise.all([
+        db.query("DELETE FROM book_topics"),
+        db.query("DELETE FROM book_authors"),
+        db.query("DELETE FROM books"),
+        db.query("DELETE FROM authors"),
+        db.query("DELETE FROM topics")
+    ]);
 
     const bookInsert = await db.query(`
         INSERT INTO books (title, cover_image, year_published, synopsis)
@@ -43,19 +45,21 @@ beforeAll(async () => {
 
 afterAll(async () => {
     console.log("Cleaning up test database...");
-    await db.query("DELETE FROM book_topics");
-    await db.query("DELETE FROM book_authors");
-    await db.query("DELETE FROM books");
-    await db.query("DELETE FROM authors");
-    await db.query("DELETE FROM topics");
-    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    await Promise.all([
+        db.query("DELETE FROM book_topics"),
+        db.query("DELETE FROM book_authors"),
+        db.query("DELETE FROM books"),
+        db.query("DELETE FROM authors"),
+        db.query("DELETE FROM topics")
+    ]);
+
     await db.end();
     console.log("Database connection closed.");
 });
 
 describe("Books Model", () => {
     test("getBookById() retrieves a book by ID with authors and topics", async () => {
-        const book = await Book.getBookById(testBookId);
         const book = await Book.getBookById(testBookId);
         expect(book).toHaveProperty("id", testBookId);
         expect(book).toHaveProperty("title", "Test Book");
