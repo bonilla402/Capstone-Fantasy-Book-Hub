@@ -2,6 +2,8 @@
 const db = require("../config/testDatabase");
 const Book = require("../models/bookModel");
 
+let testBookId, testAuthorId, testTopicId;
+
 beforeAll(async () => {
     console.log("Seeding test data for books...");
 
@@ -11,58 +13,32 @@ beforeAll(async () => {
     await db.query("DELETE FROM authors");
     await db.query("DELETE FROM topics");
 
-    const bookCheck = await db.query(`SELECT id FROM books WHERE title = $1`, ['Test Book']);
-    let bookId;
+    const bookInsert = await db.query(`
+        INSERT INTO books (title, cover_image, year_published, synopsis)
+        VALUES ($1, $2, $3, $4) RETURNING id
+    `, ['Test Book', 'https://example.com/test.jpg', 2000, 'A test book for testing purposes.']);
 
-    if (bookCheck.rowCount === 0) {
-        const bookInsert = await db.query(`
-            INSERT INTO books (title, cover_image, year_published, synopsis)
-            VALUES ($1, $2, $3, $4) RETURNING id
-        `, ['Test Book', 'https://example.com/test.jpg', 2000, 'A test book for testing purposes.']);
-        bookId = bookInsert.rows[0].id;
-    } else {
-        bookId = bookCheck.rows[0].id;
-    }
+    testBookId = bookInsert.rows[0].id;
 
-    const authorCheck = await db.query(`SELECT id FROM authors WHERE name = $1`, ['Test Author']);
-    let authorId;
+    const authorInsert = await db.query(`
+        INSERT INTO authors (name) VALUES ($1) RETURNING id
+    `, ['Test Author']);
 
-    if (authorCheck.rowCount === 0) {
-        const authorInsert = await db.query(`
-            INSERT INTO authors (name) VALUES ($1) RETURNING id
-        `, ['Test Author']);
-        authorId = authorInsert.rows[0].id;
-    } else {
-        authorId = authorCheck.rows[0].id;
-    }
+    testAuthorId = authorInsert.rows[0].id;
 
     await db.query(`
-        INSERT INTO book_authors (book_id, author_id)
-        SELECT $1, $2
-        WHERE NOT EXISTS (
-            SELECT 1 FROM book_authors WHERE book_id = $1 AND author_id = $2
-        )
-    `, [bookId, authorId]);
+        INSERT INTO book_authors (book_id, author_id) VALUES ($1, $2)
+    `, [testBookId, testAuthorId]);
 
-    const topicCheck = await db.query(`SELECT id FROM topics WHERE name = $1`, ['Test Topic']);
-    let topicId;
+    const topicInsert = await db.query(`
+        INSERT INTO topics (name) VALUES ($1) RETURNING id
+    `, ['Test Topic']);
 
-    if (topicCheck.rowCount === 0) {
-        const topicInsert = await db.query(`
-            INSERT INTO topics (name) VALUES ($1) RETURNING id
-        `, ['Test Topic']);
-        topicId = topicInsert.rows[0].id;
-    } else {
-        topicId = topicCheck.rows[0].id;
-    }
+    testTopicId = topicInsert.rows[0].id;
 
     await db.query(`
-        INSERT INTO book_topics (book_id, topic_id)
-        SELECT $1, $2
-        WHERE NOT EXISTS (
-            SELECT 1 FROM book_topics WHERE book_id = $1 AND topic_id = $2
-        )
-    `, [bookId, topicId]);
+        INSERT INTO book_topics (book_id, topic_id) VALUES ($1, $2)
+    `, [testBookId, testTopicId]);
 });
 
 afterAll(async () => {
@@ -72,25 +48,26 @@ afterAll(async () => {
     await db.query("DELETE FROM books");
     await db.query("DELETE FROM authors");
     await db.query("DELETE FROM topics");
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     await db.end();
     console.log("Database connection closed.");
 });
 
 describe("Books Model", () => {
+    test("getBookById() retrieves a book by ID with authors and topics", async () => {
+        const book = await Book.getBookById(testBookId);
+        const book = await Book.getBookById(testBookId);
+        expect(book).toHaveProperty("id", testBookId);
+        expect(book).toHaveProperty("title", "Test Book");
+        expect(book.authors).toContain("Test Author");
+        expect(book.topics).toContain("Test Topic");
+    });
+
     test("getAllBooks() retrieves a list of books with authors and topics", async () => {
         const result = await Book.getAllBooks(1, 10);
         expect(result).toHaveProperty("books");
         expect(result).toHaveProperty("totalBooks");
         expect(result.books.length).toBeGreaterThan(0);
-    });
-
-    test("getBookById() retrieves a book by ID with authors and topics", async () => {
-        const book = await Book.getBookById(1);
-        expect(book).toHaveProperty("id");
-        expect(book).toHaveProperty("title");
-        expect(book.authors).toContain("Test Author");
-        expect(book.topics).toContain("Test Topic");
     });
 
     test("searchBooks() filters books by title", async () => {
@@ -114,10 +91,13 @@ describe("Books Model", () => {
     });
 
     test("getAllBooks() correctly applies pagination", async () => {
-        await db.query(`
+        const anotherBookInsert = await db.query(`
             INSERT INTO books (title, cover_image, year_published, synopsis)
-            VALUES ('Another Test Book', 'https://example.com/another.jpg', 2010, 'Another test book.')
+            VALUES ('Another Test Book', 'https://example.com/another.jpg', 2010, 'Another test book.') RETURNING id
         `);
+
+        const anotherBookId = anotherBookInsert.rows[0].id;
+
         const page1 = await Book.getAllBooks(1, 1);
         expect(page1.books.length).toBe(1);
     });
