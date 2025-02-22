@@ -5,6 +5,17 @@ import SearchBar from "../SearchBar/SearchBar";
 import "./BookList.css";
 import Pagination from "./Pagination";
 
+/**
+ * BookList
+ *
+ * A React component for displaying a list of books. It provides:
+ *  - A search bar (by author/title/topic).
+ *  - Pagination controls for navigating multiple pages of books.
+ *  - A grid of BookCard components for each book.
+ *
+ * @component
+ * @returns {JSX.Element} A paginated list of books with searching and filtering.
+ */
 const BookList = () => {
     const [books, setBooks] = useState([]);
     const [page, setPage] = useState(1);
@@ -12,6 +23,9 @@ const BookList = () => {
     const booksPerPage = 20;
     const [filters, setFilters] = useState({ author: "", title: "", topic: "" });
 
+    /**
+     * Fetches and sets books whenever page or filters change.
+     */
     useEffect(() => {
         async function fetchBooks() {
             try {
@@ -20,7 +34,7 @@ const BookList = () => {
                     author: filters.author,
                     topic: filters.topic,
                     page,
-                    limit: booksPerPage
+                    limit: booksPerPage,
                 });
                 setBooks(data.books);
                 setTotalBooks(data.totalBooks);
@@ -33,6 +47,11 @@ const BookList = () => {
 
     const totalPages = Math.ceil(totalBooks / booksPerPage);
 
+    /**
+     * Handles search input from SearchBar and resets page to 1.
+     *
+     * @param {Object} searchFilters - The filters object { author, title, topic }.
+     */
     const handleSearch = (searchFilters) => {
         setFilters(searchFilters);
         setPage(1);
