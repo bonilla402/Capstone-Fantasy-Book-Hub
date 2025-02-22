@@ -36,7 +36,7 @@ const GroupList = () => {
         try {
             const groups = query
                 ? await FantasyBookHubApi.searchGroups(query)
-                : await FantasyBookHubApi.getAllGroups();
+                : await FantasyBookHubApi.getGroups();
             setGroups(groups);
         } catch (err) {
             setError("Failed to load groups. Please try again later.");
