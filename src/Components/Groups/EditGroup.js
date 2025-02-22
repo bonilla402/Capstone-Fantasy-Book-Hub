@@ -3,6 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "../../Styles/Form.css";
 
+/**
+ * EditGroup
+ *
+ * Allows users (specifically the group creator or an admin) to modify
+ * the name and description of an existing group. If the group is not found
+ * or the user lacks permissions, an error message is displayed.
+ *
+ * @component
+ * @returns {JSX.Element} A form to edit the specified group's details.
+ */
 const EditGroup = () => {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -11,9 +21,12 @@ const EditGroup = () => {
         name: "",
         description: "",
     });
-
     const [error, setError] = useState("");
 
+    /**
+     * On mount, fetch the group details from the server
+     * and populate the form for editing.
+     */
     useEffect(() => {
         (async () => {
             try {
@@ -32,6 +45,9 @@ const EditGroup = () => {
         })();
     }, [id]);
 
+    /**
+     * Updates local state based on user input in form fields.
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -40,6 +56,10 @@ const EditGroup = () => {
         }));
     };
 
+    /**
+     * Submits the edited group data to the server.
+     * If successful, navigates back to the group's detail page.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
@@ -54,7 +74,6 @@ const EditGroup = () => {
                 groupName: formData.name,
                 description: formData.description,
             });
-
             navigate(`/groups/${id}`);
         } catch (err) {
             setError("Failed to update group. Please try again.");

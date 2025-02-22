@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "../../Styles/Form.css";
 
+/**
+ * AddGroup
+ *
+ * Provides a form to create a new discussion group by entering a name
+ * and optional description. On success, navigates back to the groups list.
+ *
+ * @component
+ * @returns {JSX.Element} A form for creating a new group.
+ */
 const AddGroup = () => {
     const navigate = useNavigate();
 
@@ -10,9 +19,11 @@ const AddGroup = () => {
         name: "",
         description: "",
     });
-
     const [error, setError] = useState("");
 
+    /**
+     * Handles changes to form fields, updating local state.
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -21,6 +32,10 @@ const AddGroup = () => {
         }));
     };
 
+    /**
+     * Submits the new group data to the server API. If successful,
+     * navigates back to the group list page.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
@@ -29,16 +44,15 @@ const AddGroup = () => {
             setError("Group name is required.");
             return;
         }
-        
+
         try {
-            // Send an object instead of separate parameters
             const response = await FantasyBookHubApi.createGroup({
                 groupName: formData.name,
-                description: formData.description
+                description: formData.description,
             });
 
             if (response?.id) {
-                navigate("/groups"); // Redirect to Groups page on success
+                navigate("/groups");
             } else {
                 setError("Failed to create group. Unexpected response.");
             }
@@ -46,7 +60,6 @@ const AddGroup = () => {
             setError(err || "Failed to create group. Please try again.");
         }
     };
-
 
     return (
         <div className="form-page">
