@@ -6,6 +6,18 @@ import MessagesList from "../Messages/MessagesList";
 import "../../Styles/Form.css";
 import "./DiscussionPage.css";
 
+/**
+ * DiscussionPage
+ *
+ * Renders a single discussion, including:
+ *  - Discussion metadata (title, book, author, etc.)
+ *  - Discussion content
+ *  - Messages list
+ *  - A form to add new messages
+ *
+ * @component
+ * @returns {JSX.Element} The detailed discussion view, or loading/error states if applicable.
+ */
 const DiscussionPage = () => {
     const { discussionId } = useParams();
     const [discussion, setDiscussion] = useState(null);
@@ -13,6 +25,9 @@ const DiscussionPage = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    /**
+     * Fetches discussion details on mount (or when discussionId changes).
+     */
     useEffect(() => {
         async function fetchDiscussion() {
             try {
@@ -49,14 +64,18 @@ const DiscussionPage = () => {
                         <h2 className="discussion-title">{discussion.title}</h2>
                         <p className="discussion-book-title"><strong>Book:</strong> {discussion.book?.title || "Unknown"}</p>
                         <p className="discussion-book-author"><strong>Author:</strong> {discussion.book?.authors?.join(", ") || "Unknown"}</p>
-                        <p className="discussion-meta"><strong>By:</strong> {discussion.created_by}</p>
+                        <p className="discussion-meta">
+                            <strong>By:</strong> {discussion.created_by}
+                        </p>
                     </div>
                 </div>
 
                 {/* Discussion Content */}
                 <p className="discussion-content">{discussion.content}</p>
 
-                <Link to={`/groups/${discussion.group_id}`} className="back-to-group">Back to Group</Link>
+                <Link to={`/groups/${discussion.group_id}`} className="back-to-group">
+                    Back to Group
+                </Link>
             </div>
 
             <MessageInput discussionId={discussionId} onMessageAdded={() => setRefreshMessages(prev => !prev)} />

@@ -4,6 +4,19 @@ import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import "../../Styles/Form.css";
 import "./NewDiscussion.css";
 
+/**
+ * NewDiscussion
+ *
+ * A form that allows the user to create a new discussion within a group.
+ * The user can search for a book by title or author (minimum 3 chars), then
+ * fill in a discussion title and content. Upon submission, the discussion is created.
+ *
+ * @component
+ * @param {Object} props
+ * @param {number|string} [props.groupId] - Optional group ID if passed directly. Defaults to the route param if not provided.
+ * @param {number|string} [props.bookId] - Optional preselected book ID.
+ * @returns {JSX.Element} A new discussion form with dynamic book search.
+ */
 const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
     const { groupId: routeGroupId } = useParams();
     const navigate = useNavigate();
@@ -19,10 +32,13 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    // Function to fetch books dynamically based on user input
+    /**
+     * Searches for books dynamically as the user types a query (minimum 3 characters).
+     * If the query is too short, clears the search results.
+     */
     const fetchBooks = async (query) => {
         if (query.length < 3) {
-            setFilteredBooks([]); // Clear results if query is too short
+            setFilteredBooks([]);
             return;
         }
 
@@ -36,12 +52,18 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
         setLoading(false);
     };
 
+    /**
+     * Handler for the search text input. Triggers fetchBooks for dynamic suggestions.
+     */
     const handleSearchChange = (e) => {
         const text = e.target.value;
         setSearchText(text);
-        fetchBooks(text); // Call backend dynamically
+        fetchBooks(text);
     };
 
+    /**
+     * Sets the selected book state once a user chooses one from the suggestions.
+     */
     const handleBookSelect = (selectedBookId, selectedTitle, selectedAuthors, selectedCover) => {
         setBookId(selectedBookId);
         setSearchText(selectedTitle);
@@ -54,6 +76,13 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
         setFilteredBooks([]);
     };
 
+    /**
+     * Submits the new discussion form, including:
+     *  - group ID
+     *  - selected book ID
+     *  - discussion title
+     *  - discussion content
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
@@ -81,7 +110,7 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
             <h2>Start a New Discussion</h2>
             {error && <p className="error-text">{error}</p>}
             {success && <p className="success-text">Discussion created successfully!</p>}
-            
+
             <div className="book-search">
                 <label>Search for a book:</label>
                 <input
@@ -97,7 +126,14 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
                             <li
                                 key={book.id}
                                 className={book.id === bookId ? "selected" : ""}
-                                onClick={() => handleBookSelect(book.id, book.title, book.authors.join(", "), book.cover_image)}
+                                onClick={() =>
+                                    handleBookSelect(
+                                        book.id,
+                                        book.title,
+                                        book.authors.join(", "),
+                                        book.cover_image
+                                    )
+                                }
                             >
                                 {book.title} - {book.authors.join(", ")}
                             </li>
@@ -108,14 +144,18 @@ const NewDiscussion = ({ groupId: propGroupId, bookId: propBookId }) => {
 
             {selectedBook && (
                 <div className="selected-book">
-                    <img src={selectedBook.cover} alt={selectedBook.title} className="selected-book-cover" />
+                    <img
+                        src={selectedBook.cover}
+                        alt={selectedBook.title}
+                        className="selected-book-cover"
+                    />
                     <div className="selected-book-info">
                         <p className="selected-book-title">{selectedBook.title}</p>
                         <p className="selected-book-authors">{selectedBook.authors}</p>
                     </div>
                 </div>
             )}
-            
+
             <form className="form" onSubmit={handleSubmit}>
                 <label>Discussion Title:</label>
                 <input
