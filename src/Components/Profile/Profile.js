@@ -3,6 +3,15 @@ import { useUser } from "../../UserContext";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css"; // Uses the vintage styling for profile
 
+/**
+ * Profile
+ *
+ * A page showing the currently logged-in user's profile information, such as username and email.
+ * If no user is found in context, redirects to the login page.
+ *
+ * @component
+ * @returns {JSX.Element|null} The user's profile, or null if not authenticated.
+ */
 const Profile = () => {
     const { user } = useUser();
     const navigate = useNavigate();

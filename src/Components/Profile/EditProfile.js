@@ -2,8 +2,19 @@
 import { useUser } from "../../UserContext";
 import FantasyBookHubApi from "../../Api/FantasyBookHubApi";
 import { useNavigate } from "react-router-dom";
-import "../../Styles/Form.css"; // Uses the shared form styling
+import "../../Styles/Form.css";
 
+/**
+ * EditProfile
+ *
+ * A form that lets the logged-in user update their profile information,
+ * including username, email, and password. Upon successful update,
+ * the user data in context is refreshed and the user is redirected
+ * to their profile page after a short delay.
+ *
+ * @component
+ * @returns {JSX.Element|null} The profile editing form, or null if not authenticated.
+ */
 const EditProfile = () => {
     const { user, dispatch } = useUser();
     const navigate = useNavigate();
@@ -13,10 +24,13 @@ const EditProfile = () => {
         email: "",
         password: "",
     });
-
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
+    /**
+     * On mount, if the user is available, prefill the form with current info;
+     * otherwise redirect to login.
+     */
     useEffect(() => {
         if (user) {
             setFormData({ username: user.username, email: user.email, password: "" });
@@ -25,6 +39,9 @@ const EditProfile = () => {
         }
     }, [user, navigate]);
 
+    /**
+     * Updates local state when form fields change.
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -33,6 +50,10 @@ const EditProfile = () => {
         }));
     };
 
+    /**
+     * Submits updated user data to the API. On success, it updates the global
+     * user context, shows a success message, and redirects to /profile.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
@@ -63,6 +84,7 @@ const EditProfile = () => {
                         onChange={handleChange}
                         required
                     />
+
                     <label>Email:</label>
                     <input
                         type="email"
@@ -71,6 +93,7 @@ const EditProfile = () => {
                         onChange={handleChange}
                         required
                     />
+
                     <label>New Password (Optional):</label>
                     <input
                         type="password"
@@ -79,6 +102,7 @@ const EditProfile = () => {
                         onChange={handleChange}
                         placeholder="Leave blank to keep current password"
                     />
+
                     <button type="submit">Update Profile</button>
                 </form>
             </div>
