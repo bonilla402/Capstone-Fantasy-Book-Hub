@@ -1,15 +1,40 @@
+/**
+ * seedDatabase.js
+ *
+ * Seeds the PostgreSQL database for the Fantasy Book Hub application,
+ * creating tables and populating them with initial data from a JSON file.
+ * This script:
+ *  1. Connects to the default PostgreSQL instance.
+ *  2. Creates the database if it doesn't already exist.
+ *  3. Connects to the newly created (or existing) database.
+ *  4. Builds the schema (tables and relationships).
+ *  5. Seeds default data, including an admin user.
+ *  6. Inserts book, author, and topic data from a JSON file.
+ *
+ * Usage:
+ *   node seedDatabase.js
+ *
+ * Environment Variables (optional):
+ *   BCRYPT_WORK_FACTOR  (defaults to 12 if not set)
+ *   Database connection details (in dbConfig) can be adjusted as needed.
+ */
+
 const fs = require('fs');
 const path = require('path');
 const { Client } = require('pg');
 const bcrypt = require('bcrypt');
 
+// The cost factor for hashing passwords.
 const BCRYPT_WORK_FACTOR = 12;
 
-// Load JSON data
+// Load JSON data for books
 const jsonFilePath = path.join(__dirname, 'books_data.json');
 const booksData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
 
-// PostgreSQL connection configuration
+/**
+ * Database connection configuration. Adjust these values to match
+ * your local or remote database environment.
+ */
 const dbConfig = {
     user: 'postgres',
     host: 'localhost',
@@ -20,12 +45,32 @@ const dbConfig = {
 
 const client = new Client(dbConfig);
 
+/**
+ * Seeds the database by:
+ *  1. Connecting to PostgreSQL and checking if the target database exists.
+ *  2. Creating the database if necessary.
+ *  3. Reconnecting to the target database.
+ *  4. Dropping and recreating tables (if they exist).
+ *  5. Creating a default admin user.
+ *  6. Reading book data from JSON and inserting authors, books, and topics,
+ *     avoiding duplicate entries via case-insensitive checks.
+ *
+ * @async
+ * @function seedDatabase
+ * @returns {Promise<void>} A Promise that resolves when all seeding steps are complete.
+ * @throws Will log an error to the console if any operation fails.
+ *
+ * @example
+ * // To run:
+ * //  node seedDatabase.js
+ */
 async function seedDatabase() {
     try {
+        // Step 1: Connect to the default PostgreSQL instance.
         await client.connect();
         console.log('Connected to PostgreSQL');
 
-        // Step 1: Create the database if it doesn't exist
+        // Determine if the 'fantasy_book_hub' database exists. Create it if not.
         const dbName = 'fantasy_book_hub';
         const checkDbExistsQuery = `SELECT 1 FROM pg_database WHERE LOWER(datname) = LOWER($1)`;
         const result = await client.query(checkDbExistsQuery, [dbName]);
@@ -37,15 +82,16 @@ async function seedDatabase() {
             console.log(`Database '${dbName}' already exists.`);
         }
 
+        // Close the initial connection
         await client.end();
 
-        // Step 2: Connect to the new database
+        // Step 2: Connect to the target database.
         const newDbConfig = { ...dbConfig, database: dbName };
         const newClient = new Client(newDbConfig);
         await newClient.connect();
         console.log(`Connected to database '${dbName}'`);
 
-        // Step 3: Create tables
+        // Step 3: Create or recreate tables (drops any existing tables).
         const schemaSQL = `
             DROP TABLE IF EXISTS book_topics, book_authors, books, authors, topics, users, discussion_groups, group_discussions, reviews, group_members, discussion_messages CASCADE;
 
@@ -134,27 +180,25 @@ async function seedDatabase() {
                                                  content TEXT NOT NULL,
                                                  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
-
         `;
 
         await newClient.query(schemaSQL);
         console.log('Tables created successfully.');
 
-        // Step 4: Insert default admin user
+        // Step 4: Create a default admin user if not already present.
         console.log("Seeding users...");
-
         const hashedAdminPassword = await bcrypt.hash("admin123", BCRYPT_WORK_FACTOR);
 
         await newClient.query(
             `INSERT INTO users (username, email, password_hash, is_admin)
              VALUES ('admin', 'admin@example.com', $1, TRUE)
-                 ON CONFLICT (email) DO NOTHING`,
+             ON CONFLICT (email) DO NOTHING`,
             [hashedAdminPassword]
         );
-
         console.log("Admin user seeded.");
 
-        // Step 5: Insert book data
+        // Step 5: Insert book data from the JSON file.
+        // Each book record may contain multiple authors and topics.
         for (const book of booksData) {
             const title = book.title.trim();
             const coverUrl = book.coverUrl ? book.coverUrl.trim() : null;
@@ -164,25 +208,26 @@ async function seedDatabase() {
             const synopsis = book.synopsis ? book.synopsis.trim() : null;
             const authors = book.author ? book.author.split(',').map(a => a.trim()) : [];
 
-            // Ensure topics are properly processed and split
+            // Parse topic fields, merging, splitting, and cleaning up delimiters.
             let topics = [];
             if (Array.isArray(book.topics)) {
-                topics = book.topics.flatMap(t => t.split('/').join(',')
-                    .split(';').join(',')
-                    .split('-').join(',')
-                    .split(',')
-                    .map(t => t.trim()))
-                    .filter(t => t !== '');
+                topics = book.topics.flatMap(t =>
+                    t.split('/').join(',')
+                        .split(';').join(',')
+                        .split('-').join(',')
+                        .split(',')
+                        .map(x => x.trim()))
+                    .filter(x => x !== '');
             } else if (typeof book.topics === 'string') {
                 topics = book.topics.split('/').join(',')
                     .split(';').join(',')
                     .split('-').join(',')
                     .split(',')
-                    .map(t => t.trim())
-                    .filter(t => t !== '');
+                    .map(x => x.trim())
+                    .filter(x => x !== '');
             }
 
-            // Insert book data
+            // Insert the book into the "books" table.
             const bookInsertQuery = `
                 INSERT INTO books (title, cover_image, year_published, synopsis)
                 VALUES ($1, $2, $3, $4) RETURNING id
@@ -191,7 +236,7 @@ async function seedDatabase() {
             const bookResult = await newClient.query(bookInsertQuery, bookValues);
             const bookId = bookResult.rows[0].id;
 
-            // Insert authors with case-insensitive check and avoid duplicates
+            // Insert authors, avoiding duplicates by using case-insensitive checks.
             for (const author of authors) {
                 const trimmedAuthor = author.toLowerCase();
                 const authorCheck = await newClient.query(
@@ -209,12 +254,13 @@ async function seedDatabase() {
                 }
 
                 await newClient.query(
-                    `INSERT INTO book_authors (book_id, author_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+                    `INSERT INTO book_authors (book_id, author_id)
+                     VALUES ($1, $2) ON CONFLICT DO NOTHING`,
                     [bookId, authorId]
                 );
             }
 
-            // Insert topics with case-insensitive check and avoid duplicates
+            // Insert topics, also avoiding duplicates by using case-insensitive checks.
             for (const topic of topics) {
                 const trimmedTopic = topic.toLowerCase();
                 const topicCheck = await newClient.query(
@@ -232,7 +278,8 @@ async function seedDatabase() {
                 }
 
                 await newClient.query(
-                    `INSERT INTO book_topics (book_id, topic_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+                    `INSERT INTO book_topics (book_id, topic_id)
+                     VALUES ($1, $2) ON CONFLICT DO NOTHING`,
                     [bookId, topicId]
                 );
             }
@@ -246,4 +293,5 @@ async function seedDatabase() {
     }
 }
 
+// Execute the main seeding function
 seedDatabase();
