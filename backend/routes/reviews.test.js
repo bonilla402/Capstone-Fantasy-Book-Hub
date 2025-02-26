@@ -15,30 +15,29 @@ beforeAll(async () => {
     await db.query("DELETE FROM books");
     await db.query("DELETE FROM users");
 
-    // ✅ Insert a book before using book_id
+    //  Insert a book before using book_id
     const bookInsert = await db.query(`
         INSERT INTO books (title, cover_image, year_published, synopsis)
         VALUES ($1, $2, $3, $4) RETURNING id
     `, ["The Hobbit", "https://example.com/hobbit.jpg", 1937, "A fantasy novel"]);
     testBookId = bookInsert.rows[0].id;
 
-    console.log("✅ Inserted Test Book ID:", testBookId);
-
-    // ✅ Insert a test user (regular user)
+    
+    //  Insert a test user (regular user)
     const userInsert = await db.query(`
         INSERT INTO users (username, email, password_hash, is_admin)
         VALUES ($1, $2, $3, $4) RETURNING id, username, is_admin
     `, ["TestUser", "testuser@example.com", "hashedpassword", false]);
     testUserId = userInsert.rows[0].id;
 
-    // ✅ Insert an admin user
+    //  Insert an admin user
     const adminInsert = await db.query(`
         INSERT INTO users (username, email, password_hash, is_admin)
         VALUES ($1, $2, $3, $4) RETURNING id, username, is_admin
     `, ["AdminUser", "admin@example.com", "hashedpassword", true]);
     adminUserId = adminInsert.rows[0].id;
 
-    // ✅ Generate JWT tokens for authentication
+    //  Generate JWT tokens for authentication
     testUserToken = jwt.sign(
         { userId: testUserId, isAdmin: false },
         SECRET_KEY,
@@ -50,11 +49,9 @@ beforeAll(async () => {
         SECRET_KEY,
         { expiresIn: "24h" }
     );
+    
 
-    console.log("✅ Test User Token:", testUserToken);
-    console.log("✅ Admin Token:", adminToken);
-
-    // ✅ Insert a test review
+    //  Insert a test review
     const reviewInsert = await db.query(`
         INSERT INTO reviews (user_id, book_id, rating, review_text)
         VALUES ($1, $2, $3, $4) RETURNING id
