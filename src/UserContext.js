@@ -15,7 +15,7 @@ import FantasyBookHubApi from "./Api/FantasyBookHubApi";
  * Creates a React context for global user state.
  * @constant
  */
-const UserContext = createContext();
+export const UserContext = createContext();
 
 /**
  * Custom hook to consume the UserContext.
