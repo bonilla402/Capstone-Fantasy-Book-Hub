@@ -1,6 +1,6 @@
 ﻿require("dotenv").config({ path: ".env.test" });
 const request = require("supertest");
-const app = require("../app"); // Express app
+const app = require("../app");
 const db = require("../config/db");
 
 let testBookId, testUserToken;
@@ -37,7 +37,6 @@ beforeAll(async () => {
     testBookId = bookInsert.rows[0].id;
 });
 
-
 afterAll(async () => {
     console.log("Cleaning up test database...");
 
@@ -45,6 +44,9 @@ afterAll(async () => {
     await db.query("DELETE FROM book_authors");
     await db.query("DELETE FROM books");
     await db.query("DELETE FROM users");
+
+    await db.end();
+    console.log("Database connection closed.");
 });
 
 describe("Books Routes", () => {
