@@ -1,6 +1,6 @@
 ﻿require("dotenv").config({ path: ".env.test" });
 const db = require("../config/db");
-const Author = require("../models/authorModel");
+const Author = require("./authorModel");
 
 let testAuthorId, testBookId, testTopicId;
 

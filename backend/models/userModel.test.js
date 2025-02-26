@@ -1,6 +1,6 @@
 ﻿require("dotenv").config({ path: ".env.test" });
 const db = require("../config/db");
-const User = require("../models/userModel");
+const User = require("./userModel");
 const bcrypt = require("bcrypt");
 
 let testUserId;
