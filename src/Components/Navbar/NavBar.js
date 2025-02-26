@@ -29,42 +29,42 @@ const NavBar = () => {
         <nav className="navbar">
             {/* App Logo linking back to home */}
             <NavLink to="/" className="nav-logo">
-                <img src={logo} alt="Fantasy Book Hub Logo" className="navbar-logo" />
+                <img src={logo} alt="Fantasy Book Hub Logo" className="navbar-logo" id="nav-logo" />
             </NavLink>
 
             {/* Navigation links */}
             <div className="nav-links">
                 {user ? (
                     <>
-                        <NavLink to="/books" className="nav-link">
+                        <NavLink to="/books" className="nav-link" id="nav-books">
                             Books
                         </NavLink>
-                        <div className="nav-dropdown">
-                            <NavLink to="/groups" className="nav-link">
+                        <div className="nav-dropdown" id="nav-groups-dropdown">
+                            <NavLink to="/groups" className="nav-link" id="nav-groups">
                                 Groups
                             </NavLink>
                             <div className="dropdown-menu">
-                                <NavLink to="/groups" className="dropdown-item">
+                                <NavLink to="/groups" className="dropdown-item" id="nav-groups-link">
                                     Groups
                                 </NavLink>
-                                <NavLink to="/groups/create" className="dropdown-item">
+                                <NavLink to="/groups/create" className="dropdown-item" id="nav-create-group">
                                     Create Group
                                 </NavLink>
                             </div>
                         </div>
-                        <NavLink to="/profile" className="nav-link">
+                        <NavLink to="/profile" className="nav-link" id="nav-profile">
                             {user.username}
                         </NavLink>
-                        <NavLink to="/" onClick={handleLogout} className="nav-link">
+                        <NavLink to="/" onClick={handleLogout} className="nav-link" id="nav-logout">
                             Logout
                         </NavLink>
                     </>
                 ) : (
                     <>
-                        <NavLink to="/login" className="nav-link">
+                        <NavLink to="/login" className="nav-link" id="nav-login">
                             Login
                         </NavLink>
-                        <NavLink to="/register" className="nav-link">
+                        <NavLink to="/register" className="nav-link" id="nav-register">
                             Register
                         </NavLink>
                     </>
