@@ -68,23 +68,25 @@ const Login = () => {
                 <h2>Login</h2>
                 {error && <p className="error-text">{error}</p>}
                 <form className="form" onSubmit={handleSubmit}>
-                    <label>Email:</label>
+                    <label htmlFor="email">Email:</label>
                     <input
-                        type="email"
+                        id="email"
                         name="email"
+                        type="email"
                         value={formData.email}
                         onChange={handleChange}
                         required
                     />
-                    <label>Password:</label>
+                    <label htmlFor="password">Password:</label> 
                     <input
-                        type="password"
+                        id="password"
                         name="password"
+                        type="password"
                         value={formData.password}
                         onChange={handleChange}
                         required
                     />
-                    <button type="submit">Login</button>
+                    <button id="login-button" type="submit">Login</button>
                 </form>
             </div>
         </div>
