@@ -76,8 +76,9 @@ const EditProfile = () => {
                 {error && <p className="error-text">{error}</p>}
                 {success && <p className="success-text">Profile updated successfully!</p>}
                 <form className="form" onSubmit={handleSubmit}>
-                    <label>Username:</label>
+                    <label htmlFor="username">Username:</label>
                     <input
+                        id="username"
                         type="text"
                         name="username"
                         value={formData.username}
@@ -85,8 +86,9 @@ const EditProfile = () => {
                         required
                     />
 
-                    <label>Email:</label>
+                    <label htmlFor="email">Email:</label>
                     <input
+                        id="email"
                         type="email"
                         name="email"
                         value={formData.email}
@@ -94,8 +96,9 @@ const EditProfile = () => {
                         required
                     />
 
-                    <label>New Password (Optional):</label>
+                    <label htmlFor="password">New Password (Optional):</label>
                     <input
+                        id="password"
                         type="password"
                         name="password"
                         value={formData.password}
@@ -107,6 +110,7 @@ const EditProfile = () => {
                 </form>
             </div>
         </div>
+
     );
 };
 

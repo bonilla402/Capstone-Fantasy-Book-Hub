@@ -1,0 +1,16 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="EditProfile Component.updates profile and redirects on success (2)" type="JavaScriptTestRunnerJest" nameIsGenerated="true">
+    <node-interpreter value="project" />
+    <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+    <working-dir value="$PROJECT_DIR$" />
+    <jest-options value="--transformIgnorePatterns &quot;node_modules/(?!@toolz/allow-react)/&quot; --env=jsdom " />
+    <envs />
+    <scope-kind value="TEST" />
+    <test-file value="$PROJECT_DIR$/src/Components/Profile/EditProfile.test.js" />
+    <test-names>
+      <test-name value="EditProfile Component" />
+      <test-name value="updates profile and redirects on success" />
+    </test-names>
+    <method v="2" />
+  </configuration>
+</component>
