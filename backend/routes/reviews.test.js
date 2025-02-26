@@ -64,6 +64,8 @@ afterAll(async () => {
     await db.query("DELETE FROM reviews");
     await db.query("DELETE FROM books");
     await db.query("DELETE FROM users");
+    await db.end();
+    console.log("Database connection closed.");
 });
 
 describe("Reviews Routes", () => {
