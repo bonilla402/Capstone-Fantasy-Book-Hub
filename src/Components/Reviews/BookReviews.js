@@ -105,20 +105,30 @@ const BookReviews = ({ bookId }) => {
 
     return (
         <>
-            {user && <ReviewForm userReview={userReview} onSubmit={handleSubmit} onDelete={handleDelete} />}
+            {user && (
+                <ReviewForm
+                    userReview={userReview}
+                    onSubmit={handleSubmit}
+                    onDelete={handleDelete}
+                    id="review-form"
+                />
+            )}
 
-            <div className="book-reviews">
-                <h3>Reviews</h3>
+            <div className="book-reviews" id="book-reviews-container">
+                <h3 id="reviews-heading">Reviews</h3>
                 {reviews.length === 0 ? (
-                    <p>No reviews yet. Be the first to review!</p>
+                    <p id="no-reviews-message">No reviews yet. Be the first to review!</p>
                 ) : (
-                    reviews.map(review => (
-                        <BookReview
-                            key={review.id}
-                            review={review}
-                            onDelete={handleDelete}
-                        />
-                    ))
+                    <div id="reviews-list">
+                        {reviews.map(review => (
+                            <BookReview
+                                key={review.id}
+                                review={review}
+                                onDelete={handleDelete}
+                                id={`review-${review.id}`}
+                            />
+                        ))}
+                    </div>
                 )}
             </div>
         </>

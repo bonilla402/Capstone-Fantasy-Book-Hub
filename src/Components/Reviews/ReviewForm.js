@@ -26,7 +26,7 @@ const ReviewForm = ({ userReview, onSubmit, onDelete }) => {
         if (userReview) {
             setFormData({
                 rating: userReview.rating,
-                reviewText: userReview.review_text,
+                reviewText: userReview.reviewText,
             });
         } else {
             setFormData({ rating: 5, reviewText: "" });
@@ -60,9 +60,10 @@ const ReviewForm = ({ userReview, onSubmit, onDelete }) => {
     return (
         <div className="review-form">
             <h3>{userReview ? "Edit Your Review" : "Leave a Review"}</h3>
-            <form onSubmit={handleSubmit}>
-                <label>Rating (1-5):</label>
+            <form id="review-form" onSubmit={handleSubmit}>
+                <label htmlFor="rating">Rating (1-5):</label>
                 <input
+                    id="rating"
                     type="number"
                     name="rating"
                     min="1"
@@ -72,8 +73,9 @@ const ReviewForm = ({ userReview, onSubmit, onDelete }) => {
                     required
                 />
 
-                <label>Review:</label>
+                <label htmlFor="reviewText">Review:</label>
                 <textarea
+                    id="reviewText"
                     name="reviewText"
                     value={formData.reviewText}
                     onChange={handleChange}
@@ -81,12 +83,13 @@ const ReviewForm = ({ userReview, onSubmit, onDelete }) => {
                 />
 
                 <div className="review-form-buttons">
-                    <button type="submit" className="submit-review-btn">
+                    <button id="submit-review" type="submit" className="submit-review-btn">
                         {userReview ? "Update Review" : "Submit Review"}
                     </button>
 
                     {userReview && (
                         <button
+                            id="delete-review"
                             type="button"
                             className="delete-review-btn"
                             onClick={handleDelete}
