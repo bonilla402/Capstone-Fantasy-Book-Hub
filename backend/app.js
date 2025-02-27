@@ -30,7 +30,10 @@ const app = express();
  * methods, and headers are allowed, as well as credential settings.
  */
 const corsOptions = {
-    origin: "http://localhost:3001", // Allow frontend (running on port 3001) to access API
+    origin: [
+        "http://localhost:3001",  // Allow local development
+        "https://frontend-fantasy-book-hub.onrender.com" // Allow deployed frontend
+    ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
