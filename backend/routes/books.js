@@ -38,7 +38,7 @@ const Book = require('../models/bookModel');
  *   }
  * ]
  */
-router.get("/", async (req, res, next) => {
+router.get("/", ensureLoggedIn, async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;  // Default to page 1
         const limit = parseInt(req.query.limit) || 20;  // Default to 20 books per page
@@ -112,7 +112,7 @@ router.get('/search', ensureLoggedIn, async (req, res, next) => {
  *   }
  * ]
  */
-router.get("/search/dynamic", async (req, res) => {
+router.get("/search/dynamic", ensureLoggedIn, async (req, res) => {
     try {
         const { query } = req.query;
         if (!query || query.length < 3) {
