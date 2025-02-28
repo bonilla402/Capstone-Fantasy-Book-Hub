@@ -1,11 +1,11 @@
 # Fantasy Book Club Hub
 
-[![Deploy](https://img.shields.io/badge/Deployed%20Site-Online-green)](https://frontend-fantasy-book-hub.onrender.com/books)
+[![Deploy](https://img.shields.io/badge/Deployed%20Site-Online-green)](https://frontend-fantasy-book-hub.onrender.com)
 
 **Book Club Hub** is a full-stack web platform built for fantasy book enthusiasts. It allows users to explore an extensive collection of fantasy literature, track their reading, review books, and engage with other readers through discussions and groups. The platform fosters an interactive community where users can connect over shared interests, participate in trading and selling books, and collaborate in book-based discussions.
 
 
-✨ **Visit the live site:** [Book Club Hub](https://frontend-fantasy-book-hub.onrender.com/books) ✨
+✨ **Visit the live site:** [Book Club Hub](https://frontend-fantasy-book-hub.onrender.com) ✨
 
 Contributions are welcome to improve the platform and make it the ultimate hub for fantasy readers!
 
