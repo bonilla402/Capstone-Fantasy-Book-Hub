@@ -4,6 +4,11 @@
 
 **Book Club Hub** is a full-stack web platform built for fantasy book enthusiasts. It allows users to explore an extensive collection of fantasy literature, track their reading, review books, and engage with other readers through discussions and groups. The platform fosters an interactive community where users can connect over shared interests, participate in trading and selling books, and collaborate in book-based discussions.
 
+
+✨ **Visit the live site:** [Book Club Hub](https://frontend-fantasy-book-hub.onrender.com/books) ✨
+
+Contributions are welcome to improve the platform and make it the ultimate hub for fantasy readers!
+
 ---
 
 ## 🚀 Key Features
@@ -179,7 +184,3 @@ These tests help ensure **code reliability, feature correctness, and API stabili
 This project is licensed under the **MIT License**.
 
 ---
-
-✨ **Visit the live site:** [Book Club Hub](https://frontend-fantasy-book-hub.onrender.com/books) ✨
-
-**Book Club Hub** is an evolving project aimed at bringing fantasy book lovers together. Contributions are welcome to improve the platform and make it the ultimate hub for fantasy readers!
