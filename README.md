@@ -1,4 +1,4 @@
-# Book Club Hub
+# Fantasy Book Club Hub
 
 [![Deploy](https://img.shields.io/badge/Deployed%20Site-Online-green)](https://frontend-fantasy-book-hub.onrender.com/books)
 
